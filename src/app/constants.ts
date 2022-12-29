@@ -6,3 +6,5 @@ export const placeholderImage: Image = {
   content: '/assets/placeholder.png',
   tags: [],
 };
+
+export const apiBaseUrl = 'https://us-central1-photo-manager-api.cloudfunctions.net/api';

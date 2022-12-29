@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import type { Image } from '../types';
+import { apiBaseUrl } from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import type { Image } from '../types';
 export class ApiService {
   constructor(private http: HttpClient) { }
 
-  apiUrl = 'http://localhost:3000/images';
+  apiUrl = `${apiBaseUrl}/images`;
 
   getImages() {
     return this.http.get<Image[]>(this.apiUrl);
