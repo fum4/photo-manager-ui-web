@@ -1,0 +1,7 @@
+/node_modules
+/build
+/dist
+.idea
+.DS_Store
+src/.DS_Store
+src/app/.DS_Store

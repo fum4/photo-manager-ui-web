@@ -1,0 +1,30 @@
+<ngx-spinner
+  type='square-loader'
+  bdColor='#136bab'
+></ngx-spinner>
+
+<app-image-preview
+  [onFilesDrop]='onFilesDrop'
+  [onSavedImageTagsChange]='onSavedImageTagsChange'
+  [removeTag]='removeTag'
+  [image]='selectedImage'
+></app-image-preview>
+
+<app-thumbnails
+  [toggleRemoveSavedImage]='toggleRemoveSavedImage'
+  [removeAttachedImage]='removeAttachedImage'
+  [onImageSelect]='onImageSelect'
+  [onFilesDrop]='onFilesDrop'
+  [removeTag]='removeTag'
+  [attachedImages]='attachedImages'
+  [savedImages]='savedImages'
+></app-thumbnails>
+
+<div class='button-box'>
+  <button
+    (click)='saveFiles()'
+    [disabled]='saveImagesButtonState.disabled'
+  >
+   {{saveImagesButtonState.label}}
+  </button>
+</div>

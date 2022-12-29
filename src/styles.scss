@@ -1,0 +1,62 @@
+$success: #086604;
+$dark_success: #0b4f09;
+
+$primary: #228ad4;
+$dark_primary: #136bab;
+
+$danger: #b30c1a;
+$dark_danger: #a30815;
+
+$disabled: #e6e7eb;
+$dark_disabled: #a2a5ab;
+
+@mixin tags-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  .tag {
+    display: flex;
+    width: fit-content;
+    height: 20px;
+    background: $primary;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 4px;
+
+    &.system-tag {
+      background: $dark-primary;
+
+      &.not-saved {
+        background: $disabled;
+        color: $dark_disabled;
+      }
+    }
+
+    > p {
+      margin: 0;
+    }
+  }
+
+  .tag-button {
+    text-align: center;
+    margin-left: 5px;
+    height: 20px;
+    width: 20px;
+    color: white;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.remove-tag {
+      margin-left: 10px;
+
+      &:hover {
+        color: black;
+      }
+    }
+  }
+}

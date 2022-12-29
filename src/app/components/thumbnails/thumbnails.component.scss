@@ -1,0 +1,93 @@
+@import '../../../styles.scss';
+
+.images-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 300px;
+  gap: 5px;
+
+  .tags-box {
+    @include tags-box;
+
+    max-width: 200px;
+  }
+
+  .image-box {
+    position: relative;
+
+    #upload-input {
+      display: none;
+    }
+
+    .image-metadata {
+      font-size: 12px;
+      max-width: 200px;
+    }
+
+    .thumbnail-action {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      border-radius: 3px;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &.delete-button {
+        background-color: $danger;
+        color: white;
+        border: none;
+        z-index: 10;
+
+        &:hover {
+          background-color: $dark_danger;
+        }
+      }
+
+      &.recover-button {
+        background-color: $primary;
+        color: white;
+        border: none;
+        z-index: 10;
+
+        &:hover {
+          background-color: $dark_primary;
+        }
+      }
+    }
+  }
+
+  .image {
+    object-fit: contain;
+    border: solid 3px transparent;
+    cursor: pointer;
+
+    &.placeholder {
+      cursor: pointer;
+    }
+
+    &.to-delete {
+      border: solid 3px $danger;
+    }
+
+    &.selected {
+      cursor: default;
+    }
+
+    &.dragging-over, &.selected {
+      border: solid 3px $primary;
+    }
+  }
+
+  .attached-image {
+    position: relative;
+    opacity: .5;
+  }
+
+  .failed-image {
+    border: solid 3px $danger;
+  }
+}

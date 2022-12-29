@@ -1,0 +1,73 @@
+@import '../../../styles.scss';
+
+.image-preview-box {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin: auto;
+  gap: 10px;
+  min-height: 550px;
+  padding-bottom: 10px;
+  padding-top: 30px;
+
+  .image-preview {
+    height: 500px;
+    width: 500px;
+    align-self: center;
+    object-fit: cover;
+
+    &.dragging-over {
+      border: solid 3px $primary;
+    }
+  }
+}
+
+.image-preview-bottom-section {
+  display: flex;
+  justify-content: space-between;
+
+  .update-image-button {
+    width: fit-content;
+  }
+
+  .tags-box {
+    @include tags-box;
+
+    max-width: 500px;
+
+    .tag-input-box {
+      display: flex;
+
+      .tag-input[aria-invalid=true] {
+        background-color: #f7d7da;
+      }
+    }
+
+    .tag-button {
+      &.save-tag {
+        background-color: $success;
+
+        &:hover {
+          background-color: $dark_success;
+        }
+      }
+
+      &.add-tag {
+        background-color: $primary;
+        border-radius: 10px;
+
+        &:hover {
+          background-color: $dark_primary;
+        }
+      }
+
+      &.cancel-add-tag {
+        background-color: $danger;
+
+        &:hover {
+          background-color: $dark_danger;
+        }
+      }
+    }
+  }
+}

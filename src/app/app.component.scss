@@ -1,0 +1,33 @@
+@import '../styles.scss';
+
+.spinner {
+  position: fixed;
+  z-index: 999;
+  stroke: red;
+}
+
+.button-box {
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 150px;
+    height: 40px;
+    margin-top: 20px;
+    background-color: $success;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: $dark-success;
+      cursor: pointer;
+    }
+
+    &:disabled {
+      background-color: $disabled;
+      color: $dark_disabled;
+      cursor: not-allowed;
+    }
+  }
+}
