@@ -15,9 +15,14 @@
     width: 500px;
     align-self: center;
     object-fit: cover;
+    border: solid 3px transparent;
 
     &.dragging-over {
       border: solid 3px $primary;
+    }
+
+    &.to-delete {
+      border: solid 3px $danger;
     }
   }
 }

@@ -26,7 +26,7 @@
       (click)='removeAttachedImage(attachedImage)'
       class='thumbnail-action delete-button'
     >
-      x
+      <img class='icon' src='/assets/close-icon.svg' alt='Remove attached image' />
     </button>
     <img
       [src]='attachedImage.content'
@@ -48,7 +48,7 @@
             (click)='removeTag(attachedImage, tag)'
             class='tag-button remove-tag'
           >
-            x
+            <img class='icon' src='/assets/close-icon.svg' alt='Remove tag' />
           </div>
         </div>
       </div>
@@ -59,11 +59,19 @@
     class='image-box'
   >
     <button
+      *ngIf='savedImage.toDelete'
       (click)='toggleRemoveSavedImage(savedImage)'
-      [class]='savedImage.toDelete ? "thumbnail-action recover-button" : "thumbnail-action delete-button"'
+      class='thumbnail-action recover-button'
     >
-      {{savedImage.toDelete ? 'Recover' : 'x'}}
+      Recover
     </button>
+    <div
+      *ngIf='!savedImage.toDelete'
+      (click)='toggleRemoveSavedImage(savedImage)'
+      class='thumbnail-action delete-button'
+    >
+      <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
+    </div>
     <img
       [src]='savedImage.content'
       [alt]='savedImage.name'
@@ -82,7 +90,7 @@
             (click)='removeTag(savedImage, tag)'
             class='tag-button remove-tag'
           >
-            x
+            <img class='icon' src='/assets/close-icon.svg' alt='Remove tag' />
           </div>
         </div>
       </div>

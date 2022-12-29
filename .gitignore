@@ -1,6 +1,7 @@
 /node_modules
 /build
 /dist
+.angular
 .idea
 .DS_Store
 src/.DS_Store
