@@ -12,7 +12,6 @@ export class ThumbnailsComponent {
   @Input() savedImages: Image[] = [];
   @Input() onImageSelect = (_image: Image) => {};
   @Input() onFilesDrop = (_files: File[]) => {};
-  @Input() removeTag = (_imageId: string, _tag: Tag) => {};
   @Input() removeAttachedImage = (_image: Image) => {};
   @Input() onDeleteSavedImage = (_image: Image) => {};
   @Input() onRecoverSavedImage = (_image: Image) => {};
