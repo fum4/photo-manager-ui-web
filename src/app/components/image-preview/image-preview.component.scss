@@ -36,43 +36,6 @@
   }
 
   .tags-box {
-    @include tags-box;
-
     max-width: 500px;
-
-    .tag-input-box {
-      display: flex;
-
-      .tag-input[aria-invalid=true] {
-        background-color: #f7d7da;
-      }
-    }
-
-    .tag-button {
-      &.save-tag {
-        background-color: $success;
-
-        &:hover {
-          background-color: $dark_success;
-        }
-      }
-
-      &.add-tag {
-        background-color: $primary;
-        border-radius: 10px;
-
-        &:hover {
-          background-color: $dark_primary;
-        }
-      }
-
-      &.cancel-add-tag {
-        background-color: $danger;
-
-        &:hover {
-          background-color: $dark_danger;
-        }
-      }
-    }
   }
 }

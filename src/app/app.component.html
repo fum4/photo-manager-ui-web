@@ -4,18 +4,17 @@
 ></ngx-spinner>
 
 <app-image-preview
-  [onFilesDrop]='onFilesDrop'
   [onSavedImageTagsChange]='onSavedImageTagsChange'
-  [removeTag]='removeTag'
+  [onFilesDrop]='onFilesDrop'
   [image]='selectedImage'
 ></app-image-preview>
 
 <app-thumbnails
+  [onSavedImageTagsChange]='onSavedImageTagsChange'
   [toggleRemoveSavedImage]='toggleRemoveSavedImage'
   [removeAttachedImage]='removeAttachedImage'
   [onImageSelect]='onImageSelect'
   [onFilesDrop]='onFilesDrop'
-  [removeTag]='removeTag'
   [attachedImages]='attachedImages'
   [savedImages]='savedImages'
 ></app-thumbnails>

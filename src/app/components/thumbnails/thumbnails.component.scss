@@ -6,16 +6,11 @@
   justify-content: center;
   align-items: flex-start;
   min-height: 300px;
-  gap: 5px;
-
-  .tags-box {
-    @include tags-box;
-
-    max-width: 200px;
-  }
+  gap: 10px;
 
   .image-box {
     position: relative;
+    max-width: 200px;
 
     #upload-input {
       display: none;
@@ -62,6 +57,12 @@
         &:hover {
           background-color: $dark_primary;
         }
+      }
+
+      .icon {
+        width: 12px;
+        height: 12px;
+        vertical-align: middle;
       }
     }
   }

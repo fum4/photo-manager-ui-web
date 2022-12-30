@@ -13,18 +13,18 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   getImages() {
-    return this.http.get<Image[]>(imagesEndpoint);
+    return this.http.get<(Image & { _id: string })[]>(imagesEndpoint);
   }
 
-  addImage(file: Pick<Image, '_id' | 'tags' | 'content'>) {
-    return this.http.post<Pick<Image, '_id' | 'tags' | 'createdAt'>>(imagesEndpoint, file);
+  addImage(file: Pick<Image, 'name' | 'content' | 'tags'>) {
+    return this.http.post<(Pick<Image, 'tags' | 'createdAt'>) & { _id: string }>(imagesEndpoint, file);
   }
 
   updateImage(_id: string, payload: Partial<Image>) {
-    return this.http.put<Pick<Image, '_id'>>(`${imagesEndpoint}/${_id}`, payload);
+    return this.http.put<{ _id: string }>(`${imagesEndpoint}/${_id}`, payload);
   }
 
   removeImage(_id: string) {
-    return this.http.delete<Pick<Image, '_id'>>(`${imagesEndpoint}/${_id}`);
+    return this.http.delete<{ _id: string }>(`${imagesEndpoint}/${_id}`);
   }
 }

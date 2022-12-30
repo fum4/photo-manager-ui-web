@@ -1,4 +1,5 @@
 <div class='images-box'>
+  <!--  File upload placeholder-->
   <div class='image-box'>
     <img
       (click)='uploadFile()'
@@ -18,16 +19,13 @@
       multiple
     />
   </div>
+
+  <!--  Attachments-->
   <div
     *ngFor='let attachedImage of attachedImages'
     class='image-box'
   >
-    <button
-      (click)='removeAttachedImage(attachedImage)'
-      class='thumbnail-action delete-button'
-    >
-      <img class='icon' src='/assets/close-icon.svg' alt='Remove attached image' />
-    </button>
+    <!--  Thumbnail-->
     <img
       [src]='attachedImage.content'
       [alt]='attachedImage.name'
@@ -36,28 +34,38 @@
       width='200px'
       height='200px'
     />
+
+    <!--  Action button-->
+    <button
+      (click)='removeAttachedImage(attachedImage)'
+      class='thumbnail-action delete-button'
+    >
+      <img class='icon' src='/assets/close-icon.svg' alt='Remove attached image' />
+    </button>
+
+    <!--  Metadata-->
     <p class='image-metadata'>
       Last modified: {{attachedImage.lastModified | date}}
     </p>
-    <div class='tags-box'>
-      <div *ngFor='let tag of attachedImage.tags'>
-        <div [class]='tag.system ? "tag system-tag not-saved" : "tag"'>
-          <p>{{tag.label}}</p>
-          <div
-            *ngIf='!tag.system'
-            (click)='removeTag(attachedImage, tag)'
-            class='tag-button remove-tag'
-          >
-            <img class='icon' src='/assets/close-icon.svg' alt='Remove tag' />
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-tags [tags]='attachedImage.tags' class='tags-box'></app-tags>
   </div>
+
+  <!--  Saved images-->
   <div
     *ngFor='let savedImage of savedImages'
     class='image-box'
   >
+    <!--  Thumbnail-->
+    <img
+      [src]='savedImage.content'
+      [alt]='savedImage.name'
+      (click)='onImageSelect(savedImage)'
+      [class]='savedImage.isSelected ? "image selected" : savedImage.toDelete ? "image to-delete" : "image"'
+      width='200px'
+      height='200px'
+    />
+
+    <!--  Action buttons-->
     <button
       *ngIf='savedImage.toDelete'
       (click)='toggleRemoveSavedImage(savedImage)'
@@ -72,28 +80,14 @@
     >
       <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
     </div>
-    <img
-      [src]='savedImage.content'
-      [alt]='savedImage.name'
-      (click)='onImageSelect(savedImage)'
-      [class]='savedImage.isSelected ? "image selected" : savedImage.toDelete ? "image to-delete" : "image"'
-      width='200px'
-      height='200px'
-    />
+
+    <!--  Metadata-->
     <p class='image-metadata'>Created at: {{savedImage.createdAt}}</p>
-    <div class='tags-box'>
-      <div *ngFor='let tag of savedImage.tags'>
-        <div [class]='tag.system ? "tag system-tag" : "tag"'>
-          <p>{{tag.label}}</p>
-          <div
-            *ngIf='!tag.system'
-            (click)='removeTag(savedImage, tag)'
-            class='tag-button remove-tag'
-          >
-            <img class='icon' src='/assets/close-icon.svg' alt='Remove tag' />
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-tags
+      [tags]='savedImage.tags'
+      [onChange]='onTagsChange(savedImage._id)'
+      [isSavedImage]='true'
+      class='tags-box'
+    ></app-tags>
   </div>
 </div>

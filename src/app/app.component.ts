@@ -16,7 +16,7 @@ export class AppComponent {
 
   title = 'Photo Manager';
 
-  savedImages: Image[] = [];
+  savedImages: (Image & { _id: string })[] = [];
   attachedImages: Image[] = [];
   selectedImage: Image = this.savedImages[0] || placeholderImage;
   imagesToDelete: Image[] = [];
@@ -42,23 +42,27 @@ export class AppComponent {
     this.selectedImage = image;
   };
 
-  onSavedImageTagsChange = (image: Image) => {
-    const changedTags = xorBy(image.tags, image.initialTags, 'label');
-    const markedAsChanged = this.imagesWithModifiedTags.some(({ _id }) => _id === image._id);
+  onSavedImageTagsChange = (imageId: string) => {
+    const image = this.savedImages.find(({ _id }) => _id === imageId);
 
-    if (changedTags.length) {
-      if (!markedAsChanged) {
-        this.imagesWithModifiedTags.push(image);
-      }
+    if (image) {
+      const changedTags = xorBy(image.tags, image.initialTags, 'label');
+      const markedAsChanged = this.imagesWithModifiedTags.some(({ _id }) => _id === image._id);
 
-      this.saveImagesButtonState.disabled = false;
-    } else {
-      if (markedAsChanged) {
-        pullAllBy(this.imagesWithModifiedTags, [{ _id: image._id }] , '_id');
-      }
+      if (changedTags.length) {
+        if (!markedAsChanged) {
+          this.imagesWithModifiedTags.push(image);
+        }
 
-      if (!this.attachedImages.length && !this.imagesToDelete.length) {
-        this.saveImagesButtonState.disabled = true;
+        this.saveImagesButtonState.disabled = false;
+      } else {
+        if (markedAsChanged) {
+          pullAllBy(this.imagesWithModifiedTags, [{ _id: image._id }] , '_id');
+        }
+
+        if (!this.attachedImages.length && !this.imagesToDelete.length) {
+          this.saveImagesButtonState.disabled = true;
+        }
       }
     }
   };
@@ -103,7 +107,7 @@ export class AppComponent {
     this.apiService.getImages().subscribe({
       next: (images) => {
         if (images.length) {
-          this.savedImages = images.reverse().map((image: Image) => ({
+          this.savedImages = images.reverse().map((image) => ({
             ...image,
             initialTags: [...image.tags]
           }));
@@ -228,12 +232,4 @@ export class AppComponent {
       this.saveImagesButtonState.disabled = true;
     }
   };
-
-  removeTag = (image: Image, tagToRemove: Tag) => {
-    pull(image.tags, tagToRemove);
-
-    if (image._id) {
-      this.onSavedImageTagsChange(image);
-    }
-  }
 }

@@ -1,0 +1,100 @@
+@import '../../../styles.scss';
+
+.tags-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  .tag {
+    display: flex;
+    width: fit-content;
+    max-width: 190px;
+    height: 20px;
+    background: $primary;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 4px;
+    text-overflow: ellipsis;
+
+    &.system-tag {
+      background: $dark-primary;
+
+      &.not-saved {
+        background: $disabled;
+        color: $dark_disabled;
+      }
+    }
+
+    &:not(.system-tag) {
+      padding-right: 5px;
+    }
+
+    > p {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .tag-button {
+    text-align: center;
+    margin-left: 5px;
+    height: 20px;
+    width: 20px;
+    line-height: 1.1;
+    border-radius: 3px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.remove-tag {
+      margin-left: 10px;
+
+      &:hover {
+        background-color: $dark-primary;
+      }
+    }
+
+    &.save-tag {
+      background-color: $success;
+
+      &:hover {
+        background-color: $dark_success;
+      }
+    }
+
+    &.add-tag {
+      background-color: $primary;
+      border-radius: 10px;
+
+      &:hover {
+        background-color: $dark_primary;
+      }
+    }
+
+    &.cancel-add-tag {
+      background-color: $danger;
+
+      &:hover {
+        background-color: $dark_danger;
+      }
+    }
+
+    .icon {
+      width: 12px;
+      height: 12px;
+      vertical-align: middle;
+    }
+  }
+
+  .tag-input-box {
+    display: flex;
+
+    .tag-input[aria-invalid=true] {
+      background-color: #f7d7da;
+    }
+  }
+}
