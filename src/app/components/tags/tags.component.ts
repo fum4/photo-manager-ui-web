@@ -10,47 +10,47 @@ import {pull} from "lodash";
 })
 export class TagsComponent {
   @Input() tags: Tag[] = [];
-  @Input() onChange = () => {};
-  @Input() isSavedImage = false;
   @Input() canAddTags = false;
+  @Input() isSavedImage = false;
+  @Input() onChange = () => {};
 
-  isAddingTags = false;
+  isAddingTag = false;
   isInvalidNewTag = false;
   newTagLabel = '';
 
   ngOnChanges() {
-    this.cancelAddTag();
+    this.hideTagInput();
   }
 
-  onTagInputKeyDown = (event: KeyboardEvent) => {
+  onKeyDown = (event: KeyboardEvent) => {
     this.isInvalidNewTag = false;
 
     if (event.key === 'Enter') {
-      this.saveTag();
+      this.addTag();
     }
-  }
+  };
 
-  addTag = () => {
-    this.isAddingTags = true;
+  showTagInput = () => {
+    this.isAddingTag = true;
 
     setTimeout(() => {
       (document.querySelector('.tag-input') as HTMLInputElement)?.focus();
     });
-  }
+  };
 
-  cancelAddTag = () => {
+  hideTagInput = () => {
     this.isInvalidNewTag = false;
-    this.isAddingTags = false;
+    this.isAddingTag = false;
     this.newTagLabel = '';
-  }
+  };
 
   removeTag = (tagToRemove: Tag) => {
     pull(this.tags, tagToRemove);
 
     this.onChange();
-  }
+  };
 
-  saveTag = () => {
+  addTag = () => {
     const isDuplicate = this.tags.some((tag) => tag.label === this.newTagLabel);
 
     if (isDuplicate) {
@@ -58,16 +58,11 @@ export class TagsComponent {
     } else {
       const newTag = { label: this.newTagLabel };
 
-      if (this.tags) {
-        this.tags.push(newTag);
-      } else {
-        this.tags = [newTag];
-      }
-
+      this.tags.push(newTag);
+      this.isAddingTag = false;
       this.newTagLabel = '';
-      this.isAddingTags = false;
 
       this.onChange();
     }
-  }
+  };
 }

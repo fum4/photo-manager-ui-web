@@ -3,7 +3,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { without, pull, pullAllBy, xorBy, difference } from 'lodash';
 
 import { ApiService } from './services/api.service';
-import type { Image, Tag } from './types';
+import type { Image } from './types';
 import { placeholderImage } from './constants';
 
 @Component({
@@ -12,64 +12,36 @@ import { placeholderImage } from './constants';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private apiService: ApiService, private spinner: NgxSpinnerService) {}
+  constructor(
+    private apiService: ApiService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   title = 'Photo Manager';
 
-  savedImages: (Image & { _id: string })[] = [];
-  attachedImages: Image[] = [];
-  selectedImage: Image = this.savedImages[0] || placeholderImage;
-  imagesToDelete: Image[] = [];
-  imagesWithModifiedTags: Image[] = [];
-
-  saveImagesButtonState = {
+  submitButtonState = {
     label: 'Save files',
     disabled: true
   };
 
+  savedImages: Image[] = [];
+  attachedImages: Image[] = [];
+  imagesToDelete: Image[] = [];
+  modifiedImages: Image[] = [];
+  selectedImage: Image = this.savedImages[0] || placeholderImage;
+
   ngOnInit() {
     this.spinner.show();
-    this.getImages();
+    this.getAllImages();
   }
 
-  onImageSelect = (image: Image) => {
+  handleImageSelect = (image: Image) => {
     this.selectedImage.isSelected = false;
-
-    if (image !== placeholderImage) {
-      image.isSelected = true;
-    }
-
     this.selectedImage = image;
+    this.selectedImage.isSelected = true;
   };
 
-  onSavedImageTagsChange = (imageId: string) => {
-    const image = this.savedImages.find(({ _id }) => _id === imageId);
-
-    if (image) {
-      const changedTags = xorBy(image.tags, image.initialTags, 'label');
-      const markedAsChanged = this.imagesWithModifiedTags.some(({ _id }) => _id === image._id);
-
-      if (changedTags.length) {
-        if (!markedAsChanged) {
-          this.imagesWithModifiedTags.push(image);
-        }
-
-        this.saveImagesButtonState.disabled = false;
-      } else {
-        if (markedAsChanged) {
-          pullAllBy(this.imagesWithModifiedTags, [{ _id: image._id }] , '_id');
-        }
-
-        if (!this.attachedImages.length && !this.imagesToDelete.length) {
-          this.saveImagesButtonState.disabled = true;
-        }
-      }
-    }
-  };
-
-  onFilesDrop = (files: File[]) => {
-    files.forEach(this.handleFileDrop);
-  }
+  onFilesDrop = (files: File[]) => files.forEach(this.handleFileDrop);
 
   handleFileDrop = (file: File) => {
     if (file) {
@@ -79,157 +51,181 @@ export class AppComponent {
       reader.onloadend = () => {
         const systemTag = {
           label: name.slice(name.lastIndexOf('.') + 1),
-          system: true,
+          isSystemTag: true,
         };
 
         const image: Image = {
           content: reader.result as string,
-          isSelected: true,
           tags: [systemTag],
+          initialTags: [systemTag],
           lastModified,
           name
         };
 
-        this.selectedImage.isSelected = false;
-        this.selectedImage = image;
+        this.handleImageSelect(image);
         this.attachedImages.unshift(image);
-
-        if (this.attachedImages.length) {
-          this.saveImagesButtonState.disabled = false;
-        }
+        this.submitButtonState.disabled = false;
       }
 
       reader.readAsDataURL(file);
     }
   };
 
-  getImages = () => {
-    this.apiService.getImages().subscribe({
+  getAllImages = () => {
+    this.apiService.getAllImages().subscribe({
       next: (images) => {
         if (images.length) {
-          this.savedImages = images.reverse().map((image) => ({
+          this.savedImages = images.map((image) => ({
             ...image,
-            initialTags: [...image.tags]
+            initialTags: [ ...image.tags ]
           }));
 
-          this.selectedImage = this.savedImages[0];
-          this.selectedImage.isSelected = true;
+          this.handleImageSelect(this.savedImages[0]);
         }
       },
       complete: () => this.spinner.hide(),
     });
   };
 
-  saveFiles = () => {
-    const reqsCount = this.attachedImages.length + this.imagesToDelete.length + this.imagesWithModifiedTags.length;
+  submitFiles = () => {
+    const reqsCount = this.attachedImages.length + this.imagesToDelete.length + this.modifiedImages.length;
     let completedReqsCount = 0;
 
     const requestCallback = () => {
       completedReqsCount++;
 
       if (completedReqsCount === reqsCount) {
-        this.saveImagesButtonState.label = 'Saved!';
+        this.submitButtonState.label = 'Saved!';
 
         setTimeout(() => {
-          this.saveImagesButtonState.label = 'Save files';
+          this.submitButtonState.label = 'Save files';
         }, 2000);
       }
     };
 
-    this.saveImagesButtonState = {
-      label: 'Saving...',
-      disabled: true,
-    };
+    this.submitButtonState = { label: 'Saving...', disabled: true };
+    this.attachedImages.forEach(this.saveImage(requestCallback));
+    this.imagesToDelete.forEach(this.deleteImage(requestCallback));
+    difference(this.modifiedImages, this.imagesToDelete).forEach(this.updateImage(requestCallback));
+  };
 
-    this.attachedImages.forEach((image: any) => {
-      const { name, content, tags } = image;
-      const payload = { name, content, tags };
+  saveImage = (callback: () => void) => (image: Image) => {
+    const { name, content, tags } = image;
 
-      this.apiService.addImage(payload)
-        .subscribe({
-          next: ({ _id, tags, createdAt }) => {
-            this.savedImages.unshift({ ...payload, _id, tags, createdAt });
-            this.attachedImages = without(this.attachedImages, image);
-            this.selectedImage.isSelected = false;
-            this.selectedImage = this.savedImages[0];
-            this.selectedImage.isSelected = true;
+    this.apiService.addImage({ name, content, tags })
+      .subscribe({
+        next: ({ _id, tags, createdAt }) => {
+          image._id = _id;
+          image.tags = tags;
+          image.initialTags = tags;
+          image.createdAt = createdAt;
 
-            image._id = _id;
-            image.tags = tags;
-            image.createdAt = createdAt;
+          this.savedImages.unshift(image);
+          this.attachedImages = without(this.attachedImages, image);
+          this.selectedImage.isSelected = false;
+          this.selectedImage = this.savedImages[0];
+          this.selectedImage.isSelected = true;
 
-            requestCallback();
-          },
-          error: () => {
-            console.error('Failed to save file ', name);
-
-            image.isError = true;
-
-            requestCallback();
-          }
-        });
-    })
-
-    this.imagesToDelete.forEach((image) => {
-      this.apiService.removeImage(image._id as string).subscribe({
-        next: ({ _id }) => {
-          pullAllBy(this.savedImages, [{ _id }], '_id');
-
-          if (this.selectedImage._id === _id) {
-            this.selectedImage = this.attachedImages[0] || this.savedImages[0] || placeholderImage;
-
-            if (this.selectedImage !== placeholderImage) {
-              this.selectedImage.isSelected = true;
-            }
-          }
-
-          requestCallback();
+          callback();
         },
         error: () => {
-          console.error('Failed to remove file with id ', image._id);
+          console.error('Failed to save file ', name);
 
-          requestCallback();
+          image.isError = true;
+
+          callback();
         }
       });
-    });
+  };
 
-    difference(this.imagesWithModifiedTags, this.imagesToDelete).forEach(({ _id, tags }) => {
-      this.apiService.updateImage(_id as string, { tags }).subscribe({
-        next: () => requestCallback(),
-        error: () => requestCallback(),
-      });
-    })
+  deleteImage = (callback: () => void) => ({ _id }: Image) => {
+    this.apiService.deleteImage(_id as string).subscribe({
+      next: () => {
+        pullAllBy(this.savedImages, [{ _id }], '_id');
+
+        if (this.selectedImage._id === _id) {
+          this.handleNoSelectedImage();
+        }
+
+        callback();
+      },
+      error: () => {
+        console.error('Failed to remove file with id ', _id);
+
+        callback();
+      }
+    });
+  };
+
+  updateImage = (callback: () => void) => (image: Image) => {
+    this.apiService.updateImage(image._id as string, { tags: image.tags }).subscribe({
+      next: () => callback(),
+      error: () => {
+        image.tags = image.initialTags;
+
+        callback();
+      },
+    });
   };
 
   removeAttachedImage = (image: Image) => {
     this.attachedImages = without(this.attachedImages, image);
 
     if (this.selectedImage === image) {
-      this.selectedImage = this.attachedImages[0] || this.savedImages[0] || placeholderImage;
-
-      if (this.selectedImage !== placeholderImage) {
-        this.selectedImage.isSelected = true;
-      }
+      this.handleNoSelectedImage();
     }
 
-    if (!this.attachedImages.length && !this.imagesToDelete.length) {
-      this.saveImagesButtonState.disabled = true;
+    this.checkButtonState();
+  };
+
+  deleteSavedImage = (image: Image) => {
+    image.toDelete = true;
+
+    this.imagesToDelete.push(image);
+    this.submitButtonState.disabled = false;
+  };
+
+  recoverSavedImage = (image: Image) => {
+    image.toDelete = false;
+
+    pull(this.imagesToDelete, image);
+    this.checkButtonState();
+  };
+
+  checkButtonState = () => {
+    this.submitButtonState.disabled = !(
+      this.attachedImages.length || this.imagesToDelete.length || this.modifiedImages.length
+    );
+  };
+
+  handleNoSelectedImage = () => {
+    this.selectedImage = this.attachedImages[0] || this.savedImages[0] || placeholderImage;
+
+    if (this.selectedImage !== placeholderImage) {
+      this.selectedImage.isSelected = true;
     }
   };
 
-  toggleRemoveSavedImage = (image: Image) => {
-    image.toDelete = !image.toDelete;
+  onSavedImageTagsChange = (imageId: string) => {
+    const image = this.savedImages.find(({ _id }) => _id === imageId);
 
-    if (image.toDelete) {
-      this.imagesToDelete.push(image);
-    } else {
-      pull(this.imagesToDelete, image);
-    }
+    if (image) {
+      const changedTags = xorBy(image.tags, image.initialTags, 'label');
+      const markedAsChanged = this.modifiedImages.some(({ _id }) => _id === image._id);
 
-    if (this.imagesToDelete.length) {
-      this.saveImagesButtonState.disabled = false;
-    } else if (!this.attachedImages.length) {
-      this.saveImagesButtonState.disabled = true;
+      if (changedTags.length) {
+        if (!markedAsChanged) {
+          this.modifiedImages.push(image);
+        }
+
+        this.submitButtonState.disabled = false;
+      } else {
+        if (markedAsChanged) {
+          pullAllBy(this.modifiedImages, [{ _id: image._id }] , '_id');
+        }
+
+        this.checkButtonState();
+      }
     }
   };
 }

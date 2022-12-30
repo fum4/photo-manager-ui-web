@@ -1,10 +1,10 @@
 <div class='tags-box'>
   <!--  Tags-->
   <div *ngFor='let tag of tags'>
-    <div [class]='tag.system ? isSavedImage ? "tag system-tag" : "tag system-tag not-saved" : "tag"'>
+    <div [class]='tag.isSystemTag ? isSavedImage ? "tag system-tag" : "tag system-tag not-saved" : "tag"'>
       <p>{{tag.label}}</p>
       <div
-        *ngIf='!tag.system'
+        *ngIf='!tag.isSystemTag'
         (click)='removeTag(tag)'
         class='tag-button remove-tag'
       >
@@ -16,30 +16,30 @@
   <!--  Action buttons-->
   <div *ngIf='canAddTags'>
     <div
-      *ngIf='!isAddingTags'
-      (click)='addTag()'
+      *ngIf='!isAddingTag'
+      (click)='showTagInput()'
       class='tag-button add-tag'
     >
       <img class='icon' src='/assets/add-icon.png' alt='Add tag' />
     </div>
     <div class='tag-input-box'>
       <input
-        *ngIf='isAddingTags'
+        *ngIf='isAddingTag'
         [(ngModel)]='newTagLabel'
-        (keydown)='onTagInputKeyDown($event)'
+        (keydown)='onKeyDown($event)'
         [attr.aria-invalid]='isInvalidNewTag'
         class='tag-input'
       >
       <div
-        *ngIf='isAddingTags'
-        (click)='cancelAddTag()'
+        *ngIf='isAddingTag'
+        (click)='hideTagInput()'
         class='tag-button cancel-add-tag'
       >
         <img class='icon' src='/assets/close-icon.svg' alt='Cancel new tag' />
       </div>
       <div
-        *ngIf='isAddingTags'
-        (click)='saveTag()'
+        *ngIf='isAddingTag'
+        (click)='addTag()'
         class='tag-button save-tag'
       >
         <img class='icon' src='/assets/done-icon.svg' alt='Submit new tag' />

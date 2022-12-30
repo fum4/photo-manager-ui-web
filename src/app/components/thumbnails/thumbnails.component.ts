@@ -9,15 +9,16 @@ import type { Image, Tag } from '../../types';
 })
 export class ThumbnailsComponent {
   @Input() attachedImages: Image[] = [];
-  @Input() savedImages: (Image & { _id: string })[] = [];
+  @Input() savedImages: Image[] = [];
   @Input() onImageSelect = (_image: Image) => {};
   @Input() onFilesDrop = (_files: File[]) => {};
   @Input() removeTag = (_imageId: string, _tag: Tag) => {};
   @Input() removeAttachedImage = (_image: Image) => {};
-  @Input() toggleRemoveSavedImage = (_image: Image) => {};
+  @Input() onDeleteSavedImage = (_image: Image) => {};
+  @Input() onRecoverSavedImage = (_image: Image) => {};
   @Input() onSavedImageTagsChange = (_imageId: string) => {};
 
-  uploadFile = () => {
+  openFileDialog = () => {
     document.getElementById('upload-input')?.click();
   }
 
@@ -29,9 +30,9 @@ export class ThumbnailsComponent {
     }
   }
 
-  onTagsChange = (imageId: string) => {
+  onTagsChange = (imageId?: string) => {
     return () => {
-      this.onSavedImageTagsChange(imageId);
+      imageId && this.onSavedImageTagsChange(imageId);
     }
   }
 }

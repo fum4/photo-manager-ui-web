@@ -11,9 +11,10 @@
 
 <app-thumbnails
   [onSavedImageTagsChange]='onSavedImageTagsChange'
-  [toggleRemoveSavedImage]='toggleRemoveSavedImage'
+  [onDeleteSavedImage]='deleteSavedImage'
+  [onRecoverSavedImage]='recoverSavedImage'
   [removeAttachedImage]='removeAttachedImage'
-  [onImageSelect]='onImageSelect'
+  [onImageSelect]='handleImageSelect'
   [onFilesDrop]='onFilesDrop'
   [attachedImages]='attachedImages'
   [savedImages]='savedImages'
@@ -21,9 +22,9 @@
 
 <div class='button-box'>
   <button
-    (click)='saveFiles()'
-    [disabled]='saveImagesButtonState.disabled'
+    (click)='submitFiles()'
+    [disabled]='submitButtonState.disabled'
   >
-   {{saveImagesButtonState.label}}
+   {{submitButtonState.label}}
   </button>
 </div>

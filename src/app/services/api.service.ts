@@ -10,21 +10,21 @@ const imagesEndpoint = `${apiBaseUrl}/images`;
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getImages() {
-    return this.http.get<(Image & { _id: string })[]>(imagesEndpoint);
+  getAllImages() {
+    return this.http.get<Image[]>(imagesEndpoint);
   }
 
-  addImage(file: Pick<Image, 'name' | 'content' | 'tags'>) {
-    return this.http.post<(Pick<Image, 'tags' | 'createdAt'>) & { _id: string }>(imagesEndpoint, file);
+  addImage(image: Pick<Image, 'name' | 'content' | 'tags'>) {
+    return this.http.post<Pick<Image, '_id' | 'tags' | 'createdAt'>>(imagesEndpoint, image);
   }
 
   updateImage(_id: string, payload: Partial<Image>) {
-    return this.http.put<{ _id: string }>(`${imagesEndpoint}/${_id}`, payload);
+    return this.http.put<void>(`${imagesEndpoint}/${_id}`, payload);
   }
 
-  removeImage(_id: string) {
-    return this.http.delete<{ _id: string }>(`${imagesEndpoint}/${_id}`);
+  deleteImage(_id: string) {
+    return this.http.delete<void>(`${imagesEndpoint}/${_id}`);
   }
 }

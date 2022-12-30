@@ -2,7 +2,7 @@
   <!--  File upload placeholder-->
   <div class='image-box'>
     <img
-      (click)='uploadFile()'
+      (click)='openFileDialog()'
       (fileDropped)='onFilesDrop($event)'
       src='/assets/upload-file.jpeg'
       alt='Add files placeholder'
@@ -68,14 +68,14 @@
     <!--  Action buttons-->
     <button
       *ngIf='savedImage.toDelete'
-      (click)='toggleRemoveSavedImage(savedImage)'
+      (click)='onRecoverSavedImage(savedImage)'
       class='thumbnail-action recover-button'
     >
       Recover
     </button>
     <div
       *ngIf='!savedImage.toDelete'
-      (click)='toggleRemoveSavedImage(savedImage)'
+      (click)='onDeleteSavedImage(savedImage)'
       class='thumbnail-action delete-button'
     >
       <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
