@@ -1,3 +1,5 @@
+import { isDevMode } from '@angular/core';
+
 import { Image } from './types';
 
 export const placeholderImage: Image = {
@@ -7,4 +9,4 @@ export const placeholderImage: Image = {
   tags: [],
 };
 
-export const apiBaseUrl = 'https://us-central1-photo-manager-api.cloudfunctions.net/api';
+export const apiBaseUrl = isDevMode() ? 'http://localhost:3000' : 'https://photomanager-api.herokuapp.com';
