@@ -22,9 +22,17 @@
 
 <div class='button-box'>
   <button
-    (click)='submitFiles()'
-    [disabled]='submitButtonState.disabled'
+    (click)='resetFiles()'
+    [disabled]='!hasChanges'
+    class='reset-button'
   >
-   {{submitButtonState.label}}
+    Reset
+  </button>
+  <button
+    (click)='submitFiles()'
+    [disabled]='!hasChanges'
+    class='submit-button'
+  >
+   {{submitButtonLabel}}
   </button>
 </div>

@@ -9,27 +9,48 @@
 .button-box {
   display: flex;
   justify-content: center;
+  gap: 15px;
 
   button {
     width: 150px;
     height: 40px;
     margin-top: 20px;
     margin-bottom: 50px;
-    background-color: $success;
     color: white;
     border: none;
     border-radius: 5px;
     font-size: 15px;
 
     &:hover {
-      background-color: $dark-success;
       cursor: pointer;
     }
 
-    &:disabled {
+    &.submit-button {
+      background-color: $success;
+
+      &:hover {
+        background-color: $dark-success;
+      }
+    }
+
+    &.reset-button {
       background-color: $disabled;
-      color: $dark_disabled;
-      cursor: not-allowed;
+      color: #4f4f4e;
+      border: solid 1px $dark_disabled;
+
+      &:hover {
+        background-color: $dark-disabled;
+        color: white;
+      }
+    }
+
+    &.submit-button, &.reset-button {
+      &:disabled {
+        background-color: $disabled;
+        color: $dark_disabled;
+        cursor: not-allowed;
+        border: none;
+      }
     }
   }
 }

@@ -18,11 +18,8 @@ export class AppComponent {
   ) {}
 
   title = 'Photo Manager';
-
-  submitButtonState = {
-    label: 'Save files',
-    disabled: true
-  };
+  submitButtonLabel = 'Save files';
+  hasChanges = false;
 
   savedImages: Image[] = [];
   attachedImages: Image[] = [];
@@ -64,7 +61,7 @@ export class AppComponent {
 
         this.handleImageSelect(image);
         this.attachedImages.unshift(image);
-        this.submitButtonState.disabled = false;
+        this.hasChanges = true;
       }
 
       reader.readAsDataURL(file);
@@ -95,18 +92,33 @@ export class AppComponent {
       completedReqsCount++;
 
       if (completedReqsCount === reqsCount) {
-        this.submitButtonState.label = 'Saved!';
+        this.submitButtonLabel = 'Saved!';
 
         setTimeout(() => {
-          this.submitButtonState.label = 'Save files';
+          this.submitButtonLabel = 'Save files';
         }, 2000);
       }
     };
 
-    this.submitButtonState = { label: 'Saving...', disabled: true };
+    this.hasChanges = false;
+    this.submitButtonLabel = 'Saving...';
     this.attachedImages.forEach(this.saveImage(requestCallback));
     this.imagesToDelete.forEach(this.deleteImage(requestCallback));
     difference(this.modifiedImages, this.imagesToDelete).forEach(this.updateImage(requestCallback));
+  };
+
+  resetFiles = () => {
+    if (this.hasChanges) {
+      this.hasChanges = false;
+      this.attachedImages = [];
+      this.imagesToDelete = [];
+      this.modifiedImages = [];
+
+      this.savedImages.forEach((savedImage) => {
+        savedImage.toDelete = false;
+        savedImage.tags = [ ...savedImage.initialTags ];
+      });
+    }
   };
 
   saveImage = (callback: () => void) => (image: Image) => {
@@ -175,25 +187,25 @@ export class AppComponent {
       this.handleNoSelectedImage();
     }
 
-    this.checkButtonState();
+    this.checkForChanges();
   };
 
   deleteSavedImage = (image: Image) => {
     image.toDelete = true;
 
     this.imagesToDelete.push(image);
-    this.submitButtonState.disabled = false;
+    this.hasChanges = true;
   };
 
   recoverSavedImage = (image: Image) => {
     image.toDelete = false;
 
     pull(this.imagesToDelete, image);
-    this.checkButtonState();
+    this.checkForChanges();
   };
 
-  checkButtonState = () => {
-    this.submitButtonState.disabled = !(
+  checkForChanges = () => {
+    this.hasChanges = !!(
       this.attachedImages.length || this.imagesToDelete.length || this.modifiedImages.length
     );
   };
@@ -218,13 +230,13 @@ export class AppComponent {
           this.modifiedImages.push(image);
         }
 
-        this.submitButtonState.disabled = false;
+        this.hasChanges = true;
       } else {
         if (markedAsChanged) {
           pullAllBy(this.modifiedImages, [{ _id: image._id }] , '_id');
         }
 
-        this.checkButtonState();
+        this.checkForChanges();
       }
     }
   };
