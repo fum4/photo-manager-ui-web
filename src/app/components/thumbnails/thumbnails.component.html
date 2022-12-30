@@ -1,93 +1,97 @@
 <div class='images-box'>
-  <!--  File upload placeholder-->
-  <div class='image-box'>
-    <img
-      (click)='openFileDialog()'
-      (fileDropped)='onFilesDrop($event)'
-      src='/assets/upload-file.jpeg'
-      alt='Add files placeholder'
-      class='image placeholder'
-      width='200px'
-      height='200px'
-      dnd
-    />
-    <input
-      (change)='onFileUpload($event)'
-      id='upload-input'
-      type='file'
-      accept='image/*'
-      multiple
-    />
-  </div>
-
-  <!--  Attachments-->
-  <div
-    *ngFor='let attachedImage of attachedImages'
-    class='image-box'
-  >
-    <!--  Thumbnail-->
-    <img
-      [src]='attachedImage.content'
-      [alt]='attachedImage.name'
-      (click)='onImageSelect(attachedImage)'
-      [ngClass]='attachedImage.isSelected ? "attached-image image selected" : attachedImage.isError ? "failed-image attached-image image" : "attached-image image"'
-      width='200px'
-      height='200px'
-    />
-
-    <!--  Action button-->
-    <button
-      (click)='removeAttachedImage(attachedImage)'
-      class='thumbnail-action delete-button'
-    >
-      <img class='icon' src='/assets/close-icon.svg' alt='Remove attached image' />
-    </button>
-
-    <!--  Metadata-->
-    <p class='image-metadata'>
-      Last modified: {{attachedImage.lastModified | date}}
-    </p>
-    <app-tags [tags]='attachedImage.tags' class='tags-box'></app-tags>
-  </div>
-
-  <!--  Saved images-->
-  <div
-    *ngFor='let savedImage of savedImages'
-    class='image-box'
-  >
-    <!--  Thumbnail-->
-    <img
-      [src]='savedImage.content'
-      [alt]='savedImage.name'
-      (click)='onImageSelect(savedImage)'
-      [class]='savedImage.isSelected ? "image selected" : savedImage.toDelete ? "image to-delete" : "image"'
-      width='200px'
-      height='200px'
-    />
-
-    <!--  Action buttons-->
-    <button
-      *ngIf='savedImage.toDelete'
-      (click)='onRecoverSavedImage(savedImage)'
-      class='thumbnail-action recover-button'
-    >
-      Recover
-    </button>
-    <div
-      *ngIf='!savedImage.toDelete'
-      (click)='onDeleteSavedImage(savedImage)'
-      class='thumbnail-action delete-button'
-    >
-      <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
+  <div class='scrollable-box'>
+    <!--  File upload placeholder-->
+    <div [class]='attachedImages.length || savedImages.length ? "image-box" : "image-box margin-auto"'>
+      <img
+        (click)='openFileDialog()'
+        (fileDropped)='onFilesDrop($event)'
+        src='/assets/upload-file.jpeg'
+        alt='Add files placeholder'
+        class='image placeholder'
+        width='200px'
+        height='200px'
+        dnd
+      />
+      <input
+        (change)='onFileUpload($event)'
+        id='upload-input'
+        type='file'
+        accept='image/*'
+        multiple
+      />
     </div>
 
-    <!--  Metadata-->
-    <p class='image-metadata'>Created at: {{savedImage.createdAt}}</p>
-    <app-tags
-      [tags]='savedImage.tags'
-      [onChange]='onTagsChange(savedImage._id)'
-      [isSavedImage]='true'
-      class='tags-box'
-    ></app-tags>
+    <!--  Attachments-->
+    <div
+      *ngFor='let attachedImage of attachedImages'
+      class='image-box'
+    >
+      <!--  Thumbnail-->
+      <img
+        [src]='attachedImage.content'
+        [alt]='attachedImage.name'
+        (click)='onImageSelect(attachedImage)'
+        [ngClass]='attachedImage.isSelected ? "attached-image image selected" : attachedImage.isError ? "failed-image attached-image image" : "attached-image image"'
+        width='200px'
+        height='200px'
+      />
+
+      <!--  Action button-->
+      <button
+        (click)='removeAttachedImage(attachedImage)'
+        class='thumbnail-action delete-button'
+      >
+        <img class='icon' src='/assets/close-icon.svg' alt='Remove attached image' />
+      </button>
+
+      <!--  Metadata-->
+      <div class='image-metadata'>
+        Last modified: {{attachedImage.lastModified | date}}
+      </div>
+      <app-tags [tags]='attachedImage.tags' class='tags-box'></app-tags>
+    </div>
+
+    <!--  Saved images-->
+    <div
+      *ngFor='let savedImage of savedImages'
+      class='image-box'
+    >
+      <!--  Thumbnail-->
+      <img
+        [src]='savedImage.content'
+        [alt]='savedImage.name'
+        (click)='onImageSelect(savedImage)'
+        [class]='savedImage.isSelected ? "image selected" : savedImage.toDelete ? "image to-delete" : "image"'
+        width='200px'
+        height='200px'
+      />
+
+      <!--  Action buttons-->
+      <button
+        *ngIf='savedImage.toDelete'
+        (click)='onRecoverSavedImage(savedImage)'
+        class='thumbnail-action recover-button'
+      >
+        Recover
+      </button>
+      <div
+        *ngIf='!savedImage.toDelete'
+        (click)='onDeleteSavedImage(savedImage)'
+        class='thumbnail-action delete-button'
+      >
+        <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
+      </div>
+
+      <!--  Metadata-->
+      <div class='image-metadata'>
+        Created: {{savedImage.createdAt | date}}
+      </div>
+      <app-tags
+        [tags]='savedImage.tags'
+        [onChange]='onTagsChange(savedImage._id)'
+        [isSavedImage]='true'
+        class='tags-box'
+      ></app-tags>
+    </div>
   </div>
 </div>

@@ -15,13 +15,13 @@
 
   <!--  Action buttons-->
   <div *ngIf='canAddTags'>
-    <div
+    <button
       *ngIf='!isAddingTag'
       (click)='showTagInput()'
-      class='tag-button add-tag'
+      class='tag-button show-tag-input'
     >
       <img class='icon' src='/assets/add-icon.png' alt='Add tag' />
-    </div>
+    </button>
     <div class='tag-input-box'>
       <input
         *ngIf='isAddingTag'
@@ -30,20 +30,21 @@
         [attr.aria-invalid]='isInvalidNewTag'
         class='tag-input'
       >
-      <div
+      <button
         *ngIf='isAddingTag'
         (click)='hideTagInput()'
-        class='tag-button cancel-add-tag'
+        class='tag-button hide-tag-input'
       >
         <img class='icon' src='/assets/close-icon.svg' alt='Cancel new tag' />
-      </div>
-      <div
+      </button>
+      <button
         *ngIf='isAddingTag'
         (click)='addTag()'
-        class='tag-button save-tag'
+        [disabled]='!newTagLabel || isInvalidNewTag'
+        class='tag-button add-tag'
       >
         <img class='icon' src='/assets/done-icon.svg' alt='Submit new tag' />
-      </div>
+      </button>
     </div>
   </div>
 </div>

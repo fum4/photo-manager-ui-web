@@ -45,9 +45,24 @@
     width: 20px;
     line-height: 1.1;
     border-radius: 3px;
+    border: none;
+    padding: 0;
 
     &:hover {
       cursor: pointer;
+    }
+
+    &.add-tag {
+      background-color: $success;
+
+      &:hover {
+        background-color: $dark_success;
+      }
+
+      &:disabled {
+        background-color: $dark_disabled;
+        cursor: not-allowed;
+      }
     }
 
     &.remove-tag {
@@ -58,15 +73,7 @@
       }
     }
 
-    &.save-tag {
-      background-color: $success;
-
-      &:hover {
-        background-color: $dark_success;
-      }
-    }
-
-    &.add-tag {
+    &.show-tag-input {
       background-color: $primary;
       border-radius: 10px;
 
@@ -75,7 +82,7 @@
       }
     }
 
-    &.cancel-add-tag {
+    &.hide-tag-input {
       background-color: $danger;
 
       &:hover {
@@ -92,9 +99,17 @@
 
   .tag-input-box {
     display: flex;
+    margin-left: 5px;
 
-    .tag-input[aria-invalid=true] {
-      background-color: #f7d7da;
+    .tag-input {
+      height: 17px;
+      border-radius: 4px;
+      border: solid 1px #c7c7c7;
+
+      &[aria-invalid=true] {
+        background-color: #eddadc;
+        border: solid 2px $danger;
+      }
     }
   }
 }

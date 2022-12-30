@@ -14,10 +14,12 @@
     width: 150px;
     height: 40px;
     margin-top: 20px;
+    margin-bottom: 50px;
     background-color: $success;
     color: white;
     border: none;
     border-radius: 5px;
+    font-size: 15px;
 
     &:hover {
       background-color: $dark-success;

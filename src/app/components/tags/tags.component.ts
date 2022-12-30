@@ -51,18 +51,20 @@ export class TagsComponent {
   };
 
   addTag = () => {
-    const isDuplicate = this.tags.some((tag) => tag.label === this.newTagLabel);
+    if (this.newTagLabel) {
+      const isDuplicate = this.tags.some((tag) => tag.label === this.newTagLabel);
 
-    if (isDuplicate) {
-      this.isInvalidNewTag = true;
-    } else {
-      const newTag = { label: this.newTagLabel };
+      if (isDuplicate) {
+        this.isInvalidNewTag = true;
+      } else {
+        const newTag = { label: this.newTagLabel };
 
-      this.tags.push(newTag);
-      this.isAddingTag = false;
-      this.newTagLabel = '';
+        this.tags.push(newTag);
+        this.isAddingTag = false;
+        this.newTagLabel = '';
 
-      this.onChange();
+        this.onChange();
+      }
     }
   };
 }
