@@ -34,12 +34,12 @@
     }
 
     &.reset-button {
-      background-color: $disabled;
-      color: #4f4f4e;
-      border: solid 1px $dark_disabled;
+      background-color: transparent;
+      color: $danger;
+      border: solid 1px $danger;
 
       &:hover {
-        background-color: $dark-disabled;
+        background-color: $danger;
         color: white;
       }
     }
