@@ -3,4 +3,7 @@
 
 <hr/>
 
-### Setup: ``npm i && npm start``
+### Commands
+
+#### ``npm start`` - Run with cloud API
+#### ``npm run start:dev`` - Run with local API
