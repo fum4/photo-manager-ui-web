@@ -171,9 +171,13 @@ export class AppComponent {
 
   updateImage = (callback: () => void) => (image: Image) => {
     this.apiService.updateImage(image._id as string, { tags: image.tags }).subscribe({
-      next: () => callback(),
+      next: () => {
+        image.initialTags = [ ...image.tags ];
+
+        callback();
+      },
       error: () => {
-        image.tags = image.initialTags;
+        image.tags = [ ...image.initialTags ];
 
         callback();
       },
