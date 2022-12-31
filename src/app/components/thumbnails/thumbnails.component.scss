@@ -37,6 +37,10 @@
         border-radius: 4px;
         cursor: pointer;
 
+        &:hover:not(.placeholder, .selected) {
+          border: solid 3px $dark-grey;
+        }
+
         &.attached-image {
           position: relative;
           opacity: .5;

@@ -22,8 +22,8 @@
       background: $dark-primary;
 
       &.not-saved {
-        background: $disabled;
-        color: $dark_disabled;
+        background: $grey;
+        color: $dark-grey;
       }
     }
 
@@ -60,7 +60,7 @@
       }
 
       &:disabled {
-        background-color: $dark_disabled;
+        background-color: $dark-grey;
         cursor: not-allowed;
       }
     }

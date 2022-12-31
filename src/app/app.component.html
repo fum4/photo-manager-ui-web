@@ -1,38 +1,41 @@
-<ngx-spinner
-  type='square-loader'
-  bdColor='#136bab'
-></ngx-spinner>
+<div (fileDropped)='onFilesDrop($event)' dnd>
+  <ngx-spinner
+    type='square-loader'
+    bdColor='#136bab'
+  ></ngx-spinner>
 
-<app-image-preview
-  [onSavedImageTagsChange]='onSavedImageTagsChange'
-  [onFilesDrop]='onFilesDrop'
-  [image]='selectedImage'
-></app-image-preview>
+  <app-image-preview
+    [onSavedImageTagsChange]='onSavedImageTagsChange'
+    [onFilesDrop]='onFilesDrop'
+    [image]='selectedImage'
+  ></app-image-preview>
 
-<app-thumbnails
-  [onSavedImageTagsChange]='onSavedImageTagsChange'
-  [onDeleteSavedImage]='deleteSavedImage'
-  [onRecoverSavedImage]='recoverSavedImage'
-  [removeAttachedImage]='removeAttachedImage'
-  [onImageSelect]='handleImageSelect'
-  [onFilesDrop]='onFilesDrop'
-  [attachedImages]='attachedImages'
-  [savedImages]='savedImages'
-></app-thumbnails>
+  <app-thumbnails
+    [onSavedImageTagsChange]='onSavedImageTagsChange'
+    [onDeleteSavedImage]='deleteSavedImage'
+    [onRecoverSavedImage]='recoverSavedImage'
+    [removeAttachedImage]='removeAttachedImage'
+    [onImageSelect]='handleImageSelect'
+    [onFilesDrop]='onFilesDrop'
+    [attachedImages]='attachedImages'
+    [savedImages]='savedImages'
+  ></app-thumbnails>
 
-<div class='button-box'>
-  <button
-    (click)='resetFiles()'
-    [disabled]='!hasChanges'
-    class='reset-button'
-  >
-    Revert changes
-  </button>
-  <button
-    (click)='submitFiles()'
-    [disabled]='!hasChanges'
-    class='submit-button'
-  >
-   {{submitButtonLabel}}
-  </button>
+  <div class='button-box'>
+    <button
+      (click)='resetFiles()'
+      [disabled]='!hasChanges'
+      class='reset-button'
+    >
+      Revert changes
+    </button>
+
+    <button
+      (click)='submitFiles()'
+      [disabled]='!hasChanges'
+      class='submit-button'
+    >
+     {{submitButtonLabel}}
+    </button>
+  </div>
 </div>

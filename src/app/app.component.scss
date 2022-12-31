@@ -46,8 +46,8 @@
 
     &.submit-button, &.reset-button {
       &:disabled {
-        background-color: $disabled;
-        color: $dark_disabled;
+        background-color: $grey;
+        color: $dark-grey;
         cursor: not-allowed;
         border: none;
       }
