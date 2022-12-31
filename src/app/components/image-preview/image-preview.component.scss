@@ -16,7 +16,7 @@
     align-self: center;
     object-fit: cover;
     border: solid 3px transparent;
-    border-radius: 5px;
+    border-radius: 20px;
 
     &.dragging-over {
       border: solid 3px $primary;
@@ -26,17 +26,15 @@
       border: solid 3px $danger;
     }
   }
-}
 
-.image-preview-bottom-section {
-  display: flex;
-  justify-content: space-between;
+  .tags {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    width: 480px;
 
-  .update-image-button {
-    width: fit-content;
-  }
-
-  .tags-box {
-    max-width: 500px;
+    .update-image-button {
+      width: fit-content;
+    }
   }
 }

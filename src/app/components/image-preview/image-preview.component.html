@@ -7,13 +7,12 @@
     [class]='image.toDelete ? "image-preview to-delete" : "image-preview"'
     dnd
   />
-  <div *ngIf='image && image._id !== "placeholder"' class='image-preview-bottom-section'>
     <app-tags
+      *ngIf='image && image._id !== "placeholder"'
       [tags]='image.tags'
       [onChange]='onTagsChange'
       [isSavedImage]='!!image._id'
       [canAddTags]='true'
-      class='tags-box'
+      class='tags'
     ></app-tags>
-  </div>
 </div>

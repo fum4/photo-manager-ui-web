@@ -52,7 +52,7 @@
       cursor: pointer;
     }
 
-    &.add-tag {
+    &.save-tag {
       background-color: $success;
 
       &:hover {
@@ -76,6 +76,7 @@
     &.show-tag-input {
       background-color: $primary;
       border-radius: 10px;
+      margin-left: 0;
 
       &:hover {
         background-color: $dark_primary;

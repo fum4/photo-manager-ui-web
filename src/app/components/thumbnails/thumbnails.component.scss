@@ -21,13 +21,18 @@
         display: none;
       }
 
+      .tags {
+        max-width: 202px;
+        margin: 0 auto;
+      }
+
       &.margin-auto {
         margin-left: auto;
         margin-right: auto;
       }
 
       .image {
-        object-fit: contain;
+        object-fit: cover;
         border: solid 3px transparent;
         border-radius: 4px;
         cursor: pointer;
@@ -62,9 +67,9 @@
         background-color: #033457;
         color: #ebebeb;
         font-size: 13px;
-        width: 196px;
+        width: 192px;
         padding: 3px 5px;
-        margin-bottom: 4px;
+        margin: 3px auto 11px;
         border-radius: 4px;
         text-align: center;
       }

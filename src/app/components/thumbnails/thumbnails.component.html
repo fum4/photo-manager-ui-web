@@ -48,7 +48,9 @@
       <div class='image-metadata'>
         Last modified: {{attachedImage.lastModified | date}}
       </div>
-      <app-tags [tags]='attachedImage.tags' class='tags-box'></app-tags>
+      <div class='tags'>
+        <app-tags [tags]='attachedImage.tags'></app-tags>
+      </div>
     </div>
 
     <!--  Saved images-->
@@ -74,24 +76,25 @@
       >
         Recover
       </button>
-      <div
+      <button
         *ngIf='!savedImage.toDelete'
         (click)='onDeleteSavedImage(savedImage)'
         class='thumbnail-action delete-button'
       >
         <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
-      </div>
+      </button>
 
       <!--  Metadata-->
       <div class='image-metadata'>
         Created: {{savedImage.createdAt | date}}
       </div>
-      <app-tags
-        [tags]='savedImage.tags'
-        [onChange]='onTagsChange(savedImage._id)'
-        [isSavedImage]='true'
-        class='tags-box'
-      ></app-tags>
+      <div class='tags'>
+        <app-tags
+          [tags]='savedImage.tags'
+          [onChange]='onTagsChange(savedImage._id)'
+          [isSavedImage]='true'
+        ></app-tags>
+      </div>
     </div>
   </div>
 </div>

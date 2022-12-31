@@ -26,7 +26,7 @@ export class TagsComponent {
     this.isInvalidNewTag = false;
 
     if (event.key === 'Enter') {
-      this.addTag();
+      this.saveTag();
     }
   };
 
@@ -50,7 +50,7 @@ export class TagsComponent {
     this.onChange();
   };
 
-  addTag = () => {
+  saveTag = () => {
     if (this.newTagLabel) {
       const isDuplicate = this.tags.some((tag) => tag.label === this.newTagLabel);
 
