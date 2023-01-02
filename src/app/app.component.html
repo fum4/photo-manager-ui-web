@@ -3,8 +3,9 @@
   bdColor='#136bab'
 ></ngx-spinner>
 
-<div class='logout-button-box'>
-  <button *ngIf='isLoggedIn' (click)='logout()'>Log out</button>
+<div *ngIf='isLoggedIn' class='account-panel'>
+  <h4>👋 <span class='welcome-mobile'>Hi</span><span class='welcome-desktop'>Welcome back</span>, <span class='username'>{{username}}</span></h4>
+  <button (click)='logout()'>Log out</button>
 </div>
 
 <div *ngIf='!isLoggedIn' class='login-view'>

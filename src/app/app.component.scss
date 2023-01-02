@@ -8,18 +8,54 @@
   height: 100%;
 }
 
-.logout-button-box {
+.account-panel {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+
+  @media (pointer: coarse) {
+    justify-content: space-between;
+    background: rgba(255, 255, 255, .7);
+    backdrop-filter: blur(1.5rem);
+    margin-bottom: 20px;
+    padding: 10px;
+    gap: 10px;
+    position: fixed;
+    width: calc(100% - 20px);
+    top: 0;
+    left: 0;
+  }
+
+  h4 {
+    font-weight: normal;
+    margin: 0;
+
+    .welcome-mobile {
+      @media (pointer: fine) {
+        display: none;
+      }
+    }
+
+    .welcome-desktop {
+      @media (pointer: coarse) {
+        display: none;
+      }
+    }
+
+    .username {
+      color: $dark-primary;
+    }
+  }
 
   button {
-    width: 150px;
+    min-width: 150px;
     height: 30px;
     border-radius: 5px;
     background-color: transparent;
     color: $danger;
     border: solid 1px $danger;
-    margin: 20px;
 
     &:hover {
       background-color: $danger;
@@ -28,7 +64,7 @@
     }
 
     @media (pointer: coarse) {
-      margin: 10px;
+      min-width: 100px;
     }
   }
 }

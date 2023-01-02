@@ -23,6 +23,7 @@ export class AppComponent {
 
   title = 'Photo Manager';
   userId = '';
+  username = '';
   isLoggedIn = false;
   hasChanges = false;
   submitButtonLabel = 'Save files';
@@ -59,9 +60,10 @@ export class AppComponent {
     });
   }
 
-  onLoginSuccess = ({ accessToken, refreshToken, userId }: LoginResponse) => {
+  onLoginSuccess = ({ accessToken, refreshToken, userId, username }: LoginResponse) => {
     this.isLoggedIn = true;
     this.userId = userId;
+    this.username = username;
 
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
@@ -121,7 +123,6 @@ export class AppComponent {
   getAllImages = () => {
     this.apiService.getAllImages(this.userId).subscribe({
       next: (images) => {
-        console.log('@@@@@@ images', images);
         if (images.length) {
           this.savedImages = images.map((image) => ({
             ...image,
