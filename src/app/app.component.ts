@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { without, pull, pullAllBy, xorBy, difference } from 'lodash';
 
 import { ApiService } from './services/api.service';
+import { AuthService, type LoginPayload, type LoginResponse } from './services/auth.service';
 import type { Image } from './types';
 import { placeholderImage } from './constants';
 
@@ -14,12 +16,16 @@ import { placeholderImage } from './constants';
 export class AppComponent {
   constructor(
     private apiService: ApiService,
-    private spinner: NgxSpinnerService
+    private authService: AuthService,
+    private spinner: NgxSpinnerService,
+    private socialAuthService: SocialAuthService
   ) {}
 
   title = 'Photo Manager';
-  submitButtonLabel = 'Save files';
+  userId = '';
+  isLoggedIn = false;
   hasChanges = false;
+  submitButtonLabel = 'Save files';
 
   savedImages: Image[] = [];
   attachedImages: Image[] = [];
@@ -28,8 +34,52 @@ export class AppComponent {
   selectedImage: Image = this.savedImages[0] || placeholderImage;
 
   ngOnInit() {
-    this.spinner.show();
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (accessToken) {
+      this.spinner.show();
+
+      this.authService.login({ token: accessToken })
+        .subscribe({
+          next: this.onLoginSuccess,
+          error: () => this.spinner.hide()
+        });
+    }
+
+    this.socialAuthService.authState.subscribe(({ idToken, provider }) => {
+      if (idToken) {
+        this.spinner.show();
+
+        this.authService.login({ token: idToken, provider } as LoginPayload)
+          .subscribe({
+            next: this.onLoginSuccess,
+            error: () => this.spinner.hide()
+          });
+      }
+    });
+  }
+
+  onLoginSuccess = ({ accessToken, refreshToken, userId }: LoginResponse) => {
+    this.isLoggedIn = true;
+    this.userId = userId;
+
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
     this.getAllImages();
+  }
+
+  logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+
+    this.resetFiles();
+
+    this.isLoggedIn = false;
+    this.userId = '';
+    this.savedImages = [];
+    this.attachedImages = [];
+    this.selectedImage = placeholderImage;
   }
 
   handleImageSelect = (image: Image) => {
@@ -69,8 +119,9 @@ export class AppComponent {
   };
 
   getAllImages = () => {
-    this.apiService.getAllImages().subscribe({
+    this.apiService.getAllImages(this.userId).subscribe({
       next: (images) => {
+        console.log('@@@@@@ images', images);
         if (images.length) {
           this.savedImages = images.map((image) => ({
             ...image,
@@ -108,35 +159,33 @@ export class AppComponent {
   };
 
   resetFiles = () => {
-    if (this.hasChanges) {
-      this.hasChanges = false;
-      this.attachedImages = [];
-      this.imagesToDelete = [];
-      this.modifiedImages = [];
+    this.hasChanges = false;
+    this.attachedImages = [];
+    this.imagesToDelete = [];
+    this.modifiedImages = [];
 
-      this.savedImages.forEach((savedImage) => {
-        savedImage.toDelete = false;
-        savedImage.tags = [ ...savedImage.initialTags ];
-      });
-    }
+    this.savedImages.forEach((savedImage) => {
+      savedImage.toDelete = false;
+      savedImage.tags = [ ...savedImage.initialTags ];
+    });
   };
 
   saveImage = (callback: () => void) => (image: Image) => {
     const { name, content, tags } = image;
 
-    this.apiService.addImage({ name, content, tags })
+    this.apiService.addImage(this.userId, { name, content, tags })
       .subscribe({
         next: ({ _id, tags, createdAt }) => {
           image._id = _id;
-          image.tags = tags;
-          image.initialTags = tags;
+          image.tags = [ ...tags ];
+          image.initialTags = [ ...tags ];
           image.createdAt = createdAt;
 
           this.savedImages.unshift(image);
-          this.attachedImages = without(this.attachedImages, image);
           this.selectedImage.isSelected = false;
           this.selectedImage = this.savedImages[0];
           this.selectedImage.isSelected = true;
+          pull(this.attachedImages, image);
 
           callback();
         },
@@ -151,7 +200,7 @@ export class AppComponent {
   };
 
   deleteImage = (callback: () => void) => ({ _id }: Image) => {
-    this.apiService.deleteImage(_id as string).subscribe({
+    this.apiService.deleteImage(this.userId, _id as string).subscribe({
       next: () => {
         pullAllBy(this.savedImages, [{ _id }], '_id');
 
@@ -170,18 +219,22 @@ export class AppComponent {
   };
 
   updateImage = (callback: () => void) => (image: Image) => {
-    this.apiService.updateImage(image._id as string, { tags: image.tags }).subscribe({
-      next: () => {
-        image.initialTags = [ ...image.tags ];
-
-        callback();
-      },
-      error: () => {
-        image.tags = [ ...image.initialTags ];
-
-        callback();
-      },
-    });
+    this.apiService.updateImage(
+      this.userId,
+      image._id as string,
+      { tags: image.tags }
+    )
+      .subscribe({
+        next: () => {
+          pullAllBy(this.modifiedImages, [{ _id: image._id }] , '_id');
+          image.initialTags = [ ...image.tags ];
+          callback();
+        },
+        error: () => {
+          image.tags = [ ...image.initialTags ];
+          callback();
+        },
+      });
   };
 
   removeAttachedImage = (image: Image) => {

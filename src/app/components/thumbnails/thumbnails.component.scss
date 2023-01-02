@@ -1,8 +1,14 @@
 @import '../../../styles.scss';
 
-.images-box {
+.thumbnails-box {
   max-width: 60%;
   margin: auto;
+
+  @media (pointer: coarse) {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 55px;
+  }
 
   .scrollable-box {
     display: flex;
@@ -13,25 +19,35 @@
     padding-bottom: 14px;
     gap: 10px;
 
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (pointer: coarse) {
+      padding-right: 20px;
+      padding-bottom: 100px;
+    }
+
     .image-box {
       position: relative;
       max-width: 206px;
-
-      #upload-input {
-        display: none;
-      }
-
-      .tags {
-        max-width: 202px;
-        margin: 0 auto;
-      }
 
       &.margin-auto {
         margin-left: auto;
         margin-right: auto;
       }
 
-      .image {
+      @media (pointer: coarse) {
+        &:last-of-type {
+          margin-right: 20px;
+        }
+      }
+
+      #upload-input {
+        display: none;
+      }
+
+      img {
         object-fit: cover;
         border: solid 3px transparent;
         border-radius: 4px;
@@ -67,18 +83,7 @@
         }
       }
 
-      .image-metadata {
-        background-color: #033457;
-        color: #ebebeb;
-        font-size: 13px;
-        width: 192px;
-        padding: 3px 5px;
-        margin: 3px auto 11px;
-        border-radius: 4px;
-        text-align: center;
-      }
-
-      .thumbnail-action {
+      button {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -92,7 +97,7 @@
           cursor: pointer;
         }
 
-        &.delete-button {
+        &.delete {
           background-color: $danger;
           color: white;
           border: none;
@@ -103,9 +108,14 @@
           &:hover {
             background-color: $dark_danger;
           }
+
+          @media (pointer: coarse) {
+            height: 24px;
+            width: 24px;
+          }
         }
 
-        &.recover-button {
+        &.recover {
           background-color: $primary;
           color: white;
           border: none;
@@ -114,6 +124,10 @@
           &:hover {
             background-color: $dark_primary;
           }
+
+          @media (pointer: coarse) {
+            height: 24px;
+          }
         }
 
         .icon {
@@ -121,6 +135,22 @@
           height: 12px;
           vertical-align: middle;
         }
+      }
+
+      .image-metadata {
+        background-color: #033457;
+        color: #ebebeb;
+        font-size: 13px;
+        width: 192px;
+        padding: 3px 5px;
+        margin: 3px auto 11px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .tags {
+        max-width: 202px;
+        margin: 0 auto;
       }
     }
   }
