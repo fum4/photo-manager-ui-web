@@ -1,6 +1,39 @@
 @import '../styles.scss';
 
-.buttons-box {
+.login-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.logout-button-box {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    width: 150px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: $danger;
+    border: solid 1px $danger;
+    margin: 20px;
+
+    &:hover {
+      background-color: $danger;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (pointer: coarse) {
+      margin: 10px;
+    }
+  }
+}
+
+.action-buttons-box {
   display: flex;
   justify-content: center;
   gap: 15px;

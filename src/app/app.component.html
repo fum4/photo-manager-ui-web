@@ -1,9 +1,17 @@
-<div (fileDropped)='onFilesDrop($event)' dnd>
-  <ngx-spinner
-    type='square-loader'
-    bdColor='#136bab'
-  ></ngx-spinner>
+<ngx-spinner
+  type='square-loader'
+  bdColor='#136bab'
+></ngx-spinner>
 
+<div class='logout-button-box'>
+  <button *ngIf='isLoggedIn' (click)='logout()'>Log out</button>
+</div>
+
+<div *ngIf='!isLoggedIn' class='login-view'>
+  <asl-google-signin-button type='standard' size='large'></asl-google-signin-button>
+</div>
+
+<div *ngIf='isLoggedIn' (fileDropped)='onFilesDrop($event)' dnd>
   <app-image-preview
     [onSavedImageTagsChange]='onSavedImageTagsChange'
     [onFilesDrop]='onFilesDrop'
@@ -21,7 +29,7 @@
     [savedImages]='savedImages'
   ></app-thumbnails>
 
-  <div class='buttons-box'>
+  <div class='action-buttons-box'>
     <button
       (click)='resetFiles()'
       [disabled]='!hasChanges'

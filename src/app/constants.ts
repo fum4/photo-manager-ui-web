@@ -10,10 +10,22 @@ export const placeholderImage: Image = {
   initialTags: [],
 };
 
+export const apiKeys = {
+  google: {
+    clientId: '876550227337-s4fja6gmhipgd2tdencb2a7tqk8164gp.apps.googleusercontent.com',
+    clientSecret: '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'
+  }
+}
+
 const localApiUrl = 'http://localhost:3000';
 const railwayApiUrl = 'https://photo-manager-api.up.railway.app';
 const herokuApiUrl = 'https://photomanager-api.herokuapp.com';
 
 const shouldEverUseHerokuAgain = false;
 
-export const apiBaseUrl = isDevMode() ? localApiUrl : shouldEverUseHerokuAgain ? herokuApiUrl : railwayApiUrl;
+const apiBaseUrl = isDevMode() ? localApiUrl : shouldEverUseHerokuAgain ? herokuApiUrl : railwayApiUrl;
+
+export const endpoints = {
+  auth: `${apiBaseUrl}/auth`,
+  images: `${apiBaseUrl}/images`,
+}
