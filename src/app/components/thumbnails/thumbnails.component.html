@@ -1,4 +1,4 @@
-<div class='images-box'>
+<div class='thumbnails-box'>
   <div class='scrollable-box'>
     <!--  File upload placeholder-->
     <div [class]='attachedImages.length || savedImages.length ? "image-box" : "image-box margin-auto"'>
@@ -7,7 +7,7 @@
         (fileDropped)='onFilesDrop($event)'
         src='/assets/upload-file.jpeg'
         alt='Add files placeholder'
-        class='image placeholder'
+        class='placeholder'
         width='200px'
         height='200px'
         dnd
@@ -31,7 +31,7 @@
         [src]='attachedImage.content'
         [alt]='attachedImage.name'
         (click)='onImageSelect(attachedImage)'
-        [ngClass]='attachedImage.isSelected ? "attached-image image selected" : attachedImage.isError ? "failed-image attached-image image" : "attached-image image"'
+        [ngClass]='attachedImage.isSelected ? "attached-image selected" : attachedImage.isError ? "failed-image attached-image" : "attached-image"'
         width='200px'
         height='200px'
       />
@@ -39,7 +39,7 @@
       <!--  Action button-->
       <button
         (click)='removeAttachedImage(attachedImage)'
-        class='thumbnail-action delete-button'
+        class='delete'
       >
         <img class='icon' src='/assets/close-icon.svg' alt='Remove attached image' />
       </button>
@@ -63,7 +63,7 @@
         [src]='savedImage.content'
         [alt]='savedImage.name'
         (click)='onImageSelect(savedImage)'
-        [class]='savedImage.isSelected ? "image selected" : savedImage.toDelete ? "image to-delete" : "image"'
+        [class]='savedImage.isSelected ? "selected" : savedImage.toDelete ? "to-delete" : ""'
         width='200px'
         height='200px'
       />
@@ -72,14 +72,14 @@
       <button
         *ngIf='savedImage.toDelete'
         (click)='onRecoverSavedImage(savedImage)'
-        class='thumbnail-action recover-button'
+        class='recover'
       >
         Recover
       </button>
       <button
         *ngIf='!savedImage.toDelete'
         (click)='onDeleteSavedImage(savedImage)'
-        class='thumbnail-action delete-button'
+        class='delete'
       >
         <img class='icon' src='/assets/close-icon.svg' alt='Remove saved image' />
       </button>

@@ -1,56 +1,51 @@
 <div class='tags-box'>
   <!--  Tags-->
-  <div *ngFor='let tag of tags'>
-    <div [class]='tag.isSystemTag ? isSavedImage ? "tag system-tag" : "tag system-tag not-saved" : "tag"'>
-      <p>{{tag.label}}</p>
-      <div
-        *ngIf='!tag.isSystemTag'
-        (click)='removeTag(tag)'
-        class='tag-button remove-tag'
-      >
-        <img class='icon' src='/assets/close-icon.svg' alt='Remove tag' />
-      </div>
-    </div>
+  <div *ngFor='let tag of tags' [class]='tag.isSystemTag ? isSavedImage ? "tag system-tag" : "tag system-tag not-saved" : "tag"'>
+    <p>{{tag.label}}</p>
+    <button
+      *ngIf='!tag.isSystemTag'
+      (click)='removeTag(tag)'
+      class='remove-tag'
+    >
+      <img src='/assets/close-icon.svg' alt='Remove tag' />
+    </button>
   </div>
 
-  <div *ngIf='canAddTags'>
-    <!--  Input-->
-    <div class='tag-input-box'>
-      <input
-        *ngIf='isAddingTag'
-        [(ngModel)]='newTagLabel'
-        (keydown)='onKeyDown($event)'
-        [attr.aria-invalid]='isInvalidNewTag'
-        class='tag-input'
-      >
+  <!--  Input-->
+  <div *ngIf='canAddTags' class='add-new-tag-box'>
+    <input
+      *ngIf='isAddingTag'
+      [(ngModel)]='newTagLabel'
+      (keydown)='onKeyDown($event)'
+      [attr.aria-invalid]='isInvalidNewTag'
+    >
 
-      <!--  Show input button-->
-      <button
-        *ngIf='!isAddingTag'
-        (click)='showTagInput()'
-        class='tag-button show-tag-input'
-      >
-        <img class='icon' src='/assets/add-icon.png' alt='Add tag' />
-      </button>
+    <!--  Show input button-->
+    <button
+      *ngIf='!isAddingTag'
+      (click)='showTagInput()'
+      class='show-tag-input'
+    >
+      <img src='/assets/add-icon.png' alt='Add tag' />
+    </button>
 
-      <!--  Hide input button-->
-      <button
-        *ngIf='isAddingTag'
-        (click)='hideTagInput()'
-        class='tag-button hide-tag-input'
-      >
-        <img class='icon' src='/assets/close-icon.svg' alt='Cancel new tag' />
-      </button>
+    <!--  Hide input button-->
+    <button
+      *ngIf='isAddingTag'
+      (click)='hideTagInput()'
+      class='hide-tag-input'
+    >
+      <img src='/assets/close-icon.svg' alt='Cancel new tag' />
+    </button>
 
-      <!--  Save tag button-->
-      <button
-        *ngIf='isAddingTag'
-        (click)='saveTag()'
-        [disabled]='!newTagLabel || isInvalidNewTag'
-        class='tag-button save-tag'
-      >
-        <img class='icon' src='/assets/done-icon.svg' alt='Submit new tag' />
-      </button>
-    </div>
+    <!--  Save tag button-->
+    <button
+      *ngIf='isAddingTag'
+      (click)='saveTag()'
+      [disabled]='!newTagLabel || isInvalidNewTag'
+      class='save-tag'
+    >
+      <img src='/assets/done-icon.svg' alt='Submit new tag' />
+    </button>
   </div>
 </div>

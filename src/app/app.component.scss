@@ -1,21 +1,22 @@
 @import '../styles.scss';
 
-.spinner {
-  position: fixed;
-  z-index: 999;
-  stroke: red;
-}
-
-.button-box {
+.buttons-box {
   display: flex;
   justify-content: center;
   gap: 15px;
+  padding: 20px 0 50px;
+
+  @media (pointer: coarse) {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 0 0 10px;
+    gap: 0;
+  }
 
   button {
     width: 150px;
     height: 40px;
-    margin-top: 20px;
-    margin-bottom: 50px;
     color: white;
     border: none;
     border-radius: 5px;
@@ -25,22 +26,34 @@
       cursor: pointer;
     }
 
+    @media (pointer: coarse) {
+      width: 100%;
+    }
+
     &.submit-button {
       background-color: $success;
 
       &:hover {
         background-color: $dark-success;
       }
+
+      @media (pointer: coarse) {
+        margin: 0 10px 0 5px;
+      }
     }
 
     &.reset-button {
-      background-color: transparent;
+      background-color: white;
       color: $danger;
       border: solid 1px $danger;
 
       &:hover {
         background-color: $danger;
         color: white;
+      }
+
+      @media (pointer: coarse) {
+        margin: 0 5px 0 10px;
       }
     }
 

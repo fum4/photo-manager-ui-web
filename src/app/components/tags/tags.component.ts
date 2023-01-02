@@ -34,7 +34,7 @@ export class TagsComponent {
     this.isAddingTag = true;
 
     setTimeout(() => {
-      (document.querySelector('.tag-input') as HTMLInputElement)?.focus();
+      (document.querySelector('.add-new-tag-box > input') as HTMLInputElement)?.focus();
     });
   };
 

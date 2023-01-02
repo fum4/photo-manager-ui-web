@@ -9,6 +9,7 @@
 
   .tag {
     display: flex;
+    align-items: center;
     width: fit-content;
     max-width: 190px;
     height: 20px;
@@ -17,6 +18,7 @@
     color: white;
     border-radius: 4px;
     text-overflow: ellipsis;
+    line-height: 1;
 
     &.system-tag {
       background: $dark-primary;
@@ -38,7 +40,7 @@
     }
   }
 
-  .tag-button {
+  button {
     text-align: center;
     margin-left: 5px;
     height: 20px;
@@ -47,6 +49,11 @@
     border-radius: 3px;
     border: none;
     padding: 0;
+
+    @media (pointer: coarse) {
+      height: 24px;
+      width: 24px;
+    }
 
     &:hover {
       cursor: pointer;
@@ -66,6 +73,7 @@
     }
 
     &.remove-tag {
+      background-color: $primary;
       margin-left: 10px;
 
       &:hover {
@@ -81,6 +89,10 @@
       &:hover {
         background-color: $dark_primary;
       }
+
+      @media (pointer: coarse) {
+        border-radius: 20px;
+      }
     }
 
     &.hide-tag-input {
@@ -91,25 +103,34 @@
       }
     }
 
-    .icon {
+    img {
       width: 12px;
       height: 12px;
       vertical-align: middle;
     }
   }
 
-  .tag-input-box {
+  .add-new-tag-box {
     display: flex;
+    align-items: center;
     margin-left: 5px;
 
-    .tag-input {
-      height: 17px;
+    input {
+      height: 20px;
       border-radius: 4px;
-      border: solid 1px #c7c7c7;
+      border: solid 2px #c7c7c7;
 
       &[aria-invalid=true] {
         background-color: #eddadc;
         border: solid 2px $danger;
+
+        &:not(:focus) {
+          background-color: transparent;
+        }
+      }
+
+      @media (pointer: coarse) {
+        height: 24px;
       }
     }
   }
