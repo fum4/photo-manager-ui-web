@@ -19,6 +19,8 @@ export class AppInterceptor implements HttpInterceptor {
     private injector: Injector
   ) {}
 
+  retries = 3;
+
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     this.authService = this.injector.get(AuthService);
 
@@ -30,28 +32,32 @@ export class AppInterceptor implements HttpInterceptor {
   }
 
   handleResponseError(error: HttpErrorResponse, request: HttpRequest<any>, next: HttpHandler): any {
-    let retries = 3;
+    if (this.retries > 0) {
+      switch(error.status) {
+        case 401: {
+          return this.authService.refreshToken().pipe(
+            switchMap((tokens) => {
+              if (tokens?.accessToken && tokens.refreshToken) {
+                this.jwtService.saveTokens(tokens);
+                request = this.setAuthHeader(request, tokens);
+                this.retries = 3;
+              }
 
-    switch(error.status) {
-      case 401: {
-        return this.authService.refreshToken().pipe(
-          switchMap((tokens) => {
-            if (tokens?.accessToken && tokens.refreshToken) {
-              this.jwtService.saveTokens(tokens);
-              request = this.setAuthHeader(request, tokens);
-              retries = 3;
-            }
+              return next.handle(request);
+            }),
+            catchError((e) => {
+              this.retries -= 1;
+              return this.handleResponseError(e, request, next);
+            }));
+        }
+        default: {
+          throw error;
+        }
+      }
+    } else {
+      this.retries = 3;
 
-            return next.handle(request);
-          }),
-          catchError((e) => {
-            retries -= 1;
-            return this.handleResponseError(e, request, next);
-          }));
-      }
-      default: {
-        throw error;
-      }
+      return next.handle(request);
     }
   }
 
