@@ -3,7 +3,7 @@ import jwt_decode from 'jwt-decode';
 
 import type { AuthTokens } from './auth.service';
 
-interface JwtPayload {
+export interface JwtPayload {
   userId: string;
   name: string;
   email: string;

@@ -1,0 +1,41 @@
+<div class='account-panel'>
+  <h4>👋 <span class='welcome-mobile'>Hi</span><span class='welcome-desktop'>Welcome back</span>, <span class='username'>{{name}}</span></h4>
+  <button (click)='logout()'>Log out</button>
+</div>
+
+<div (fileDropped)='onFilesDrop($event)' dnd>
+  <app-image-preview
+    [onSavedImageTagsChange]='onSavedImageTagsChange'
+    [onFilesDrop]='onFilesDrop'
+    [image]='selectedImage'
+  ></app-image-preview>
+
+  <app-thumbnails
+    [onSavedImageTagsChange]='onSavedImageTagsChange'
+    [onDeleteSavedImage]='deleteSavedImage'
+    [onRecoverSavedImage]='recoverSavedImage'
+    [removeAttachedImage]='removeAttachedImage'
+    [onImageSelect]='handleImageSelect'
+    [onFilesDrop]='onFilesDrop'
+    [attachedImages]='attachedImages'
+    [savedImages]='savedImages'
+  ></app-thumbnails>
+
+  <div class='action-buttons-box'>
+    <button
+      (click)='resetFiles()'
+      [disabled]='!hasChanges'
+      class='reset-button'
+    >
+      Revert changes
+    </button>
+
+    <button
+      (click)='submitFiles()'
+      [disabled]='!hasChanges'
+      class='submit-button'
+    >
+      {{submitButtonLabel}}
+    </button>
+  </div>
+</div>

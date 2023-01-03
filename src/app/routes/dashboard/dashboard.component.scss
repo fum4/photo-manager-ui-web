@@ -1,0 +1,136 @@
+@import '../../../styles.scss';
+
+.account-panel {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+
+  @media (pointer: coarse) {
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+    padding: 10px;
+    gap: 10px;
+    position: fixed;
+    width: calc(100% - 20px);
+    top: 0;
+    left: 0;
+  }
+
+  h4 {
+    font-weight: normal;
+    margin: 0;
+
+    .welcome-mobile {
+      @media (pointer: fine) {
+        display: none;
+      }
+    }
+
+    .welcome-desktop {
+      @media (pointer: coarse) {
+        display: none;
+      }
+    }
+
+    .username {
+      color: $dark-primary;
+    }
+
+    @media (pointer: coarse) {
+      &, .username {
+        color: #38373B;
+      }
+    }
+  }
+
+  button {
+    min-width: 150px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: transparent;
+    color: $danger;
+    border: solid 1px $danger;
+
+    &:hover {
+      background-color: $danger;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (pointer: coarse) {
+      min-width: 100px;
+    }
+  }
+}
+
+.action-buttons-box {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px 0 50px;
+
+  @media (pointer: coarse) {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 0 0 10px;
+    gap: 0;
+  }
+
+  button {
+    width: 150px;
+    height: 40px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    @media (pointer: coarse) {
+      width: 100%;
+    }
+
+    &.submit-button {
+      background-color: $success;
+
+      &:hover {
+        background-color: $dark-success;
+      }
+
+      @media (pointer: coarse) {
+        margin: 0 10px 0 5px;
+      }
+    }
+
+    &.reset-button {
+      background-color: white;
+      color: $danger;
+      border: solid 1px $danger;
+
+      &:hover {
+        background-color: $danger;
+        color: white;
+      }
+
+      @media (pointer: coarse) {
+        margin: 0 5px 0 10px;
+      }
+    }
+
+    &.submit-button, &.reset-button {
+      &:disabled {
+        background-color: $grey;
+        color: $dark-grey;
+        cursor: not-allowed;
+        border: none;
+      }
+    }
+  }
+}

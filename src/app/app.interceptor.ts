@@ -39,8 +39,9 @@ export class AppInterceptor implements HttpInterceptor {
             switchMap((tokens) => {
               if (tokens?.accessToken && tokens.refreshToken) {
                 this.jwtService.saveTokens(tokens);
-                request = this.setAuthHeader(request, tokens);
                 this.retries = 3;
+
+                request = this.setAuthHeader(request, tokens);
               }
 
               return next.handle(request);

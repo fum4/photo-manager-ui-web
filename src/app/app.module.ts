@@ -12,10 +12,13 @@ import {
 } from '@abacritt/angularx-social-login';
 
 import { AppComponent } from './app.component';
-import { AuthService } from './services/auth.service';
-import { ApiService } from './services/api.service';
-import { JwtService } from './services/jwt.service';
 import { AppInterceptor } from './app.interceptor';
+import { AppRoutingModule } from './app-routing.module';
+import { AuthComponent } from './routes/auth/auth.component';
+import { DashboardComponent } from './routes/dashboard/dashboard.component';
+import { AuthService } from './services/auth.service';
+import { ImageService } from './services/image.service';
+import { JwtService } from './services/jwt.service';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { ThumbnailsComponent } from './components/thumbnails/thumbnails.component';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
@@ -39,6 +42,8 @@ const SocialAuthService = {
 @NgModule({
   declarations: [
     AppComponent,
+    AuthComponent,
+    DashboardComponent,
     ImagePreviewComponent,
     TagsComponent,
     ThumbnailsComponent,
@@ -51,11 +56,12 @@ const SocialAuthService = {
     BrowserAnimationsModule,
     HttpClientModule,
     NgxSpinnerModule,
-    SocialLoginModule
+    SocialLoginModule,
+    AppRoutingModule
   ],
   providers: [
     JwtService,
-    ApiService,
+    ImageService,
     AuthService,
     SocialAuthService,
     {
