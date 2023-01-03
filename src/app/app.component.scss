@@ -1,11 +1,135 @@
 @import '../styles.scss';
 
+@font-face {
+  font-family: 'futurist_fixed-width';
+  src: url('../assets/fonts/futrfw_3-webfont.woff2') format('woff2'),
+  url('../assets/fonts/futrfw_3-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+@keyframes wave {
+  2% {
+    transform: translateX(1);
+  }
+
+  25% {
+    transform: translateX(-25%);
+  }
+
+  50% {
+    transform: translateX(-50%);
+  }
+
+  75% {
+    transform: translateX(-25%);
+  }
+
+  100% {
+    transform: translateX(1);
+  }
+}
+
 .login-view {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
+
+  .content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 20%;
+    gap: 40px;
+    z-index: 1;
+
+    @media (max-width: 500px) {
+      backdrop-filter: none;
+    }
+
+    h1, .google-sign-in-button {
+      z-index: 1;
+    }
+
+    h1 {
+      font-family: futurist_fixed-width, sans-serif;
+      color: white;
+      font-size: 3rem;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,.3));
+
+      @media (max-width: 1300px) {
+        font-size: 2.5rem;
+      }
+
+      @media (max-width: 1000px) {
+        font-size: 2rem;
+      }
+
+      @media (max-width: 500px) {
+        display: none;
+      }
+    }
+
+    .button-box {
+      z-index: 1;
+      border-radius: 40px;
+      backdrop-filter: blur(30rem);
+      border: 2px dashed rgba(66,53,109, .35);
+      padding: 30px 50px;
+    }
+  }
+
+  .background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    overflow: hidden;
+    animation: gradient 150s ease infinite;
+    background-size: 400% 400%;
+    background: linear-gradient(315deg, rgba(31, 0, 94, 1) 2%, rgba(60, 132, 206, 1) 38%, rgba(48, 168, 226, 1) 68%) fixed;
+
+    .wave {
+      background: rgb(255 255 255 / 25%);
+      border-radius: 1000% 1000% 0 0;
+      position: fixed;
+      width: 100%;
+      height: 12em;
+      animation: wave 10s -3s linear infinite;
+      transform: translate3d(0, 0, 0);
+      opacity: 0.8;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .wave:nth-of-type(2) {
+      bottom: -1.25em;
+      animation: wave 18s linear reverse infinite;
+      opacity: 0.8;
+    }
+
+    .wave:nth-of-type(3) {
+      bottom: -2.5em;
+      animation: wave 20s -1s reverse infinite;
+      opacity: 0.9;
+    }
+
+  }
 }
 
 .account-panel {
@@ -17,8 +141,8 @@
 
   @media (pointer: coarse) {
     justify-content: space-between;
-    background: rgba(255, 255, 255, .7);
-    backdrop-filter: blur(1.5rem);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
     margin-bottom: 20px;
     padding: 10px;
     gap: 10px;
@@ -46,6 +170,12 @@
 
     .username {
       color: $dark-primary;
+    }
+
+    @media (pointer: coarse) {
+      &, .username {
+        color: #38373B;
+      }
     }
   }
 
