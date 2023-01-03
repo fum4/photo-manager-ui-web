@@ -29,5 +29,4 @@
 
 ### ✋ Limitations
 
-- Refresh token only refreshes on new logins. If the user never disconnects the `refreshToken` will not be updated
-- JWT interceptor will fire multiple refresh token requests if multiple parallel requests fail at the sime time with `401 Unauthorized`
+- JWT interceptor will fire multiple refresh token requests if several parallel requests fail at the sime time with `401 Unauthorized`
