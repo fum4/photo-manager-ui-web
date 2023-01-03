@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import type { Image } from '../types';
 import { endpoints } from '../constants';
+import type { Image } from '../types';
 
 @Injectable({
   providedIn: 'root'

@@ -4,10 +4,12 @@ import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { without, pull, pullAllBy, xorBy, difference } from 'lodash';
 
 import { ApiService } from './services/api.service';
-import { AuthService, type LoginPayload, type LoginResponse } from './services/auth.service';
+import { AuthService, AuthProvider, type AuthTokens } from './services/auth.service';
+import { JwtService } from './services/jwt.service';
 import type { Image } from './types';
 import { placeholderImage } from './constants';
 
+// TODO: Need to break this into separate routes
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,12 +20,14 @@ export class AppComponent {
     private apiService: ApiService,
     private authService: AuthService,
     private spinner: NgxSpinnerService,
-    private socialAuthService: SocialAuthService
+    private socialAuthService: SocialAuthService,
+    private jwtService: JwtService,
   ) {}
 
   title = 'Photo Manager';
   userId = '';
   username = '';
+  email = '';
   isLoggedIn = false;
   hasChanges = false;
   submitButtonLabel = 'Save files';
@@ -37,51 +41,50 @@ export class AppComponent {
   ngOnInit() {
     const accessToken = localStorage.getItem('accessToken');
 
+    const loginObserver = {
+      next: this.onLoginSuccess,
+      error: () => this.spinner.hide()
+    };
+
     if (accessToken) {
       this.spinner.show();
-
-      this.authService.login({ token: accessToken })
-        .subscribe({
-          next: this.onLoginSuccess,
-          error: () => this.spinner.hide()
-        });
+      this.authService.silentLogin().subscribe(loginObserver);
     }
 
     this.socialAuthService.authState.subscribe(({ idToken, provider }) => {
       if (idToken) {
         this.spinner.show();
-
-        this.authService.login({ token: idToken, provider } as LoginPayload)
-          .subscribe({
-            next: this.onLoginSuccess,
-            error: () => this.spinner.hide()
-          });
+        this.authService.login(idToken, provider as AuthProvider).subscribe(loginObserver);
       }
     });
   }
 
-  onLoginSuccess = ({ accessToken, refreshToken, userId, username }: LoginResponse) => {
+  onLoginSuccess = (tokens: AuthTokens) => {
+    const { userId, name } = this.jwtService.saveTokens(tokens);
+
     this.isLoggedIn = true;
     this.userId = userId;
-    this.username = username;
+    this.username = name;
 
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-
-    this.getAllImages();
+    this.getAllImages(userId);
   }
 
   logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    this.spinner.show();
 
-    this.resetFiles();
+    this.authService.logout().subscribe({
+      next: () => {
+        this.jwtService.clearSession();
+        this.resetFiles();
 
-    this.isLoggedIn = false;
-    this.userId = '';
-    this.savedImages = [];
-    this.attachedImages = [];
-    this.selectedImage = placeholderImage;
+        this.isLoggedIn = false;
+        this.userId = '';
+        this.savedImages = [];
+        this.attachedImages = [];
+        this.selectedImage = placeholderImage;
+      },
+      complete: () => this.spinner.hide()
+    });
   }
 
   handleImageSelect = (image: Image) => {
@@ -120,8 +123,8 @@ export class AppComponent {
     }
   };
 
-  getAllImages = () => {
-    this.apiService.getAllImages(this.userId).subscribe({
+  getAllImages = (userId: string) => {
+    this.apiService.getAllImages(userId).subscribe({
       next: (images) => {
         if (images.length) {
           this.savedImages = images.map((image) => ({

@@ -14,7 +14,8 @@ import {
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
 import { ApiService } from './services/api.service';
-import { ApiInterceptor } from './interceptors/api.interceptor';
+import { JwtService } from './services/jwt.service';
+import { AppInterceptor } from './app.interceptor';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { ThumbnailsComponent } from './components/thumbnails/thumbnails.component';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
@@ -53,12 +54,13 @@ const SocialAuthService = {
     SocialLoginModule
   ],
   providers: [
+    JwtService,
     ApiService,
     AuthService,
     SocialAuthService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: ApiInterceptor,
+      useClass: AppInterceptor,
       multi: true,
     }
   ],
