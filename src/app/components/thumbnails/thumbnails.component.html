@@ -1,7 +1,7 @@
 <div class='thumbnails-box'>
-  <div class='scrollable-box'>
+  <div [class]='attachedImages.length || savedImages.length ? "scrollable-box" : "scrollable-box empty"'>
     <!--  File upload placeholder-->
-    <div [class]='attachedImages.length || savedImages.length ? "image-box" : "image-box margin-auto"'>
+    <div [class]='attachedImages.length || savedImages.length ? "image-box" : "image-box no-siblings"'>
       <img
         (click)='openFileDialog()'
         (fileDropped)='onFilesDrop($event)'

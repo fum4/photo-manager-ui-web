@@ -17,6 +17,7 @@
     min-height: 300px;
     overflow-x: scroll;
     padding-bottom: 14px;
+    padding-right: 0;
     gap: 10px;
 
     &::-webkit-scrollbar {
@@ -24,23 +25,26 @@
     }
 
     @media (pointer: coarse) {
-      padding-right: 20px;
       padding-bottom: 100px;
+
+      &:not(.empty) {
+        padding-right: 20px;
+      }
     }
 
     .image-box {
       position: relative;
       max-width: 206px;
 
-      &.margin-auto {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
       @media (pointer: coarse) {
         &:last-of-type {
           margin-right: 20px;
         }
+      }
+
+      &.no-siblings {
+        margin-left: auto;
+        margin-right: auto;
       }
 
       #upload-input {
@@ -54,7 +58,7 @@
         cursor: pointer;
 
         &:hover:not(.placeholder, .selected) {
-          border: solid 3px $dark-grey;
+          border: solid 3px #486b85;
         }
 
         &.attached-image {
@@ -137,7 +141,7 @@
       }
 
       .image-metadata {
-        background-color: #033457;
+        background-color: #012640;
         color: #ebebeb;
         font-size: 13px;
         width: 192px;

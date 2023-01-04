@@ -1,28 +1,31 @@
 @import '../../../styles.scss';
 
-.account-panel {
+.header {
+  background-color: rgba(3, 27, 46, .5);
+  backdrop-filter: blur(10px);
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding: 20px;
   gap: 20px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
 
   @media (pointer: coarse) {
     justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    margin-bottom: 20px;
+    background-color: white;
     padding: 10px;
     gap: 10px;
-    position: fixed;
     width: calc(100% - 20px);
-    top: 0;
-    left: 0;
   }
 
   h4 {
     font-weight: normal;
     margin: 0;
+    color: white;
 
     .welcome-mobile {
       @media (pointer: fine) {
@@ -37,7 +40,7 @@
     }
 
     .username {
-      color: $dark-primary;
+      color: #79c0f2;
     }
 
     @media (pointer: coarse) {
@@ -64,7 +67,15 @@
     @media (pointer: coarse) {
       min-width: 100px;
     }
+
+    @media (pointer: fine) {
+      margin-right: 40px;
+    }
   }
+}
+
+.image-preview {
+  margin-top: 100px;
 }
 
 .action-buttons-box {
@@ -110,7 +121,7 @@
     }
 
     &.reset-button {
-      background-color: white;
+      background-color: transparent;
       color: $danger;
       border: solid 1px $danger;
 
@@ -121,6 +132,7 @@
 
       @media (pointer: coarse) {
         margin: 0 5px 0 10px;
+        background-color: white;
       }
     }
 

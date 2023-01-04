@@ -19,4 +19,8 @@ body {
   height: 100%;
   line-height: 1.5;
   font-family: Arial, Verdana, sans-serif;
+
+  @media (pointer: fine) {
+    background: linear-gradient(315deg, #031b2e, #073e66, #0e5d96) fixed;
+  }
 }
