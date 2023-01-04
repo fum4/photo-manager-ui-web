@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import jwt_decode from 'jwt-decode';
 
-import type { AuthTokens } from './auth.service';
-
-export interface JwtPayload {
-  userId: string;
-  name: string;
-  email: string;
-}
+import type { AuthTokens, Credentials } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +17,12 @@ export class JwtService {
 
       const {
         userId, name, email
-      } = jwt_decode<JwtPayload>(accessToken);
+      } = jwt_decode<Credentials>(accessToken);
 
       return { userId, name, email };
     }
 
-    return {} as JwtPayload;
+    throw new Error('Tokens are not valid');
   };
 
   clearSession = () => {

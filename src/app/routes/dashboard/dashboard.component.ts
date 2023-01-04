@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
 import { without, pull, pullAllBy, xorBy, difference } from 'lodash';
 
-import { JwtService } from '../../services/jwt.service';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, type AuthStatus } from '../../services/auth.service';
 import { ImageService } from '../../services/image.service';
 import { placeholderImage } from '../../constants';
 import type { Image } from '../../types';
@@ -16,14 +17,17 @@ import type { Image } from '../../types';
 })
 export class DashboardComponent {
   constructor(
-    private jwtService: JwtService,
+    private titleService: Title,
     private authService: AuthService,
     private imageService: ImageService,
     private spinner: NgxSpinnerService,
     private router: Router
-  ) {}
+  ) {
+    titleService.setTitle(this.title);
+  }
 
-  title = 'Photo Manager | Dashboard'
+  authStatusSubscription = new Subscription;
+  title = 'Photo Manager | Dashboard';
   userId = '';
   name = '';
 
@@ -37,38 +41,32 @@ export class DashboardComponent {
   selectedImage: Image = this.savedImages[0] || placeholderImage;
 
   ngOnInit() {
-    const { userId, name } = this.authService.getCredentials();
+    this.authStatusSubscription = this.authService.status.subscribe(this.authStatusObserver);
+  }
 
-    if (userId) {
-      this.getAllImages(userId);
+  ngOnDestroy() {
+    this.authStatusSubscription?.unsubscribe();
+  }
+
+  authStatusObserver = ({ isAuthenticated, userId, name }: AuthStatus) => {
+    if (isAuthenticated) {
+      if (this.userId !== userId) {
+        this.getAllImages(userId);
+        this.userId = userId;
+        this.name = name;
+      }
     } else {
       this.router.navigate([ '/auth' ]);
     }
-
-    this.userId = userId;
-    this.name = name;
   }
 
   logout = () => {
-    this.spinner.show();
-
-    this.authService.logout().subscribe({
-      next: () => {
-        this.jwtService.clearSession();
-        this.authService.clearCredentials();
-        this.router.navigate([ 'auth' ]);
-      },
-      complete: () => this.spinner.hide()
-    });
+    this.authService.logout();
   }
 
-  handleImageSelect = (image: Image) => {
-    this.selectedImage.isSelected = false;
-    this.selectedImage = image;
-    this.selectedImage.isSelected = true;
-  };
-
-  onFilesDrop = (files: File[]) => files.forEach(this.handleFileDrop);
+  onFilesDrop = (files: File[]) => {
+    files.forEach(this.handleFileDrop);
+  }
 
   handleFileDrop = (file: File) => {
     if (file) {
@@ -99,6 +97,8 @@ export class DashboardComponent {
   };
 
   getAllImages = (userId: string) => {
+    this.spinner.show();
+
     this.imageService.getAll(userId).subscribe({
       next: (images) => {
         if (images.length) {
@@ -133,8 +133,8 @@ export class DashboardComponent {
     this.hasChanges = false;
     this.submitButtonLabel = 'Saving...';
     this.attachedImages.forEach(this.saveImage(requestCallback));
-    this.imagesToDelete.forEach(this.delete(requestCallback));
-    difference(this.modifiedImages, this.imagesToDelete).forEach(this.update(requestCallback));
+    this.imagesToDelete.forEach(this.deleteImage(requestCallback));
+    difference(this.modifiedImages, this.imagesToDelete).forEach(this.updateImage(requestCallback));
   };
 
   resetFiles = () => {
@@ -178,7 +178,7 @@ export class DashboardComponent {
       });
   };
 
-  update = (callback: () => void) => (image: Image) => {
+  updateImage = (callback: () => void) => (image: Image) => {
     this.imageService.update(
       this.userId,
       image._id as string,
@@ -197,10 +197,11 @@ export class DashboardComponent {
       });
   };
 
-  delete = (callback: () => void) => ({ _id }: Image) => {
+  deleteImage = (callback: () => void) => ({ _id }: Image) => {
     this.imageService.delete(this.userId, _id as string).subscribe({
       next: () => {
         pullAllBy(this.savedImages, [{ _id }], '_id');
+        pullAllBy(this.imagesToDelete, [{ _id }], '_id');
 
         if (this.selectedImage._id === _id) {
           this.handleNoSelectedImage();
@@ -226,7 +227,7 @@ export class DashboardComponent {
     this.checkForChanges();
   };
 
-  deleteSavedImage = (image: Image) => {
+  removeSavedImage = (image: Image) => {
     image.toDelete = true;
 
     this.imagesToDelete.push(image);
@@ -238,6 +239,12 @@ export class DashboardComponent {
 
     pull(this.imagesToDelete, image);
     this.checkForChanges();
+  };
+
+  handleImageSelect = (image: Image) => {
+    this.selectedImage.isSelected = false;
+    this.selectedImage = image;
+    this.selectedImage.isSelected = true;
   };
 
   handleNoSelectedImage = () => {
