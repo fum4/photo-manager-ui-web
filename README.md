@@ -5,10 +5,10 @@
 
 ### Commands
 
-#### ``npm start`` - Run with cloud API
-#### ``npm run start:dev`` - Run with local API
+#### ``pnpm start`` - Run with cloud API
+#### ``pnpm start:dev`` - Run with local API
 
-### Or check out the demo - https://photo-manager-ui.web.app
+### Or check out the demo - https://photo-manager-ui.vercel.app
 
 <hr />
 
@@ -23,7 +23,7 @@
 - System tag correction on API side (e.g. `jpg` might be wrongly inferred as MIME type instead of `jpeg`)
 - Tags validation (cannot be duplicated)
 
-### ⚠️ JWT is very short lived (10 secs) in order to be easily noticed !
+### ⚠️ JWT is very short-lived (10 secs) in order to be easy to test
 
 <hr />
 
