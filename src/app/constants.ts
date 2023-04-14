@@ -18,12 +18,20 @@ export const apiKeys = {
 }
 
 const localApiUrl = 'http://localhost:3000';
+const vercelApiUrl = 'https://photo-manager-api.vercel.app';
 const railwayApiUrl = 'https://photo-manager-api.up.railway.app';
 const herokuApiUrl = 'https://photomanager-api.herokuapp.com';
 
+const shouldEverUseRailwayAgain = false;
 const shouldEverUseHerokuAgain = false;
 
-const apiBaseUrl = isDevMode() ? localApiUrl : shouldEverUseHerokuAgain ? herokuApiUrl : railwayApiUrl;
+const apiBaseUrl = isDevMode()
+  ? localApiUrl
+  : shouldEverUseHerokuAgain
+    ? herokuApiUrl
+    : shouldEverUseRailwayAgain
+      ? railwayApiUrl
+      : vercelApiUrl;
 
 export const endpoints = {
   auth: `${apiBaseUrl}/auth`,
